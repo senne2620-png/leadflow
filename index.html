@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Noord Installatie LeadFlow</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+    <div id="loginScherm">
+
+        <h1>Noord Installatie</h1>
+        <h2>LeadFlow Login</h2>
+
+        <label for="gebruikersnaam">Gebruikersnaam</label>
+        <input
+            type="text"
+            id="gebruikersnaam"
+            placeholder="Gebruikersnaam"
+        >
+
+        <label for="wachtwoord">Wachtwoord</label>
+        <input
+            type="password"
+            id="wachtwoord"
+            placeholder="Wachtwoord"
+        >
+
+        <button id="loginKnop">Inloggen</button>
+
+        <p id="loginFout"></p>
+
+    </div>
+
+
+    <!-- DASHBOARD -->
+    <div id="appInhoud" style="display: none;">
+
+        <header>
+            <h1>Noord Installatie LeadFlow</h1>
+
+            <button id="uitloggenKnop">
+                Uitloggen
+            </button>
+        </header>
+
+
+        <!-- LEAD AANMAKEN -->
+        <section>
+
+            <h2>Nieuwe lead</h2>
+
+            <form id="leadFormulier">
+
+                <input
+                    type="text"
+                    id="naam"
+                    placeholder="Naam"
+                    required
+                >
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="E-mailadres"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="telefoon"
+                    placeholder="Telefoonnummer"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="postcode"
+                    placeholder="Postcode"
+                    required
+                >
+
+                <select id="urgentie" required>
+                    <option value="">Urgentie</option>
+                    <option value="Vandaag">Vandaag</option>
+                    <option value="Deze week">Deze week</option>
+                    <option value="Later">Later</option>
+                </select>
+
+                <select id="budget" required>
+                    <option value="">Budget</option>
+                    <option value="Hoog">Hoog</option>
+                    <option value="Middel">Middel</option>
+                    <option value="Laag">Laag</option>
+                </select>
+
+                <select id="project" required>
+                    <option value="">Type project</option>
+                    <option value="Grote installatie">
+                        Grote installatie
+                    </option>
+                    <option value="Nieuwe installatie">
+                        Nieuwe installatie
+                    </option>
+                    <option value="Kleine reparatie">
+                        Kleine reparatie
+                    </option>
+                </select>
+
+                <button type="submit">
+                    Lead analyseren
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- ZOEKEN -->
+        <section>
+
+            <h2>Leads</h2>
+
+            <input
+                type="text"
+                id="zoekveld"
+                placeholder="Zoek op naam, e-mail of postcode"
+            >
+
+        </section>
+
+
+        <!-- FILTERS -->
+        <section id="filters">
+
+            <button data-filter="ALLE">
+                Alle
+            </button>
+
+            <button data-filter="HOT">
+                HOT 🔥
+            </button>
+
+            <button data-filter="WARM">
+                WARM 🟠
+            </button>
+
+            <button data-filter="COLD">
+                COLD 🔵
+            </button>
+
+        </section>
+
+
+        <!-- STATISTIEKEN -->
+        <section id="statistieken">
+
+            <div class="stat-kaart">
+                <h3>Totaal</h3>
+                <span id="totaalLeads">0</span>
+            </div>
+
+            <div class="stat-kaart">
+                <h3>HOT</h3>
+                <span id="hotLeads">0</span>
+            </div>
+
+            <div class="stat-kaart">
+                <h3>WARM</h3>
+                <span id="warmLeads">0</span>
+            </div>
+
+            <div class="stat-kaart">
+                <h3>COLD</h3>
+                <span id="coldLeads">0</span>
+            </div>
+
+        </section>
+
+
+        <!-- LEADLIJST -->
+        <section>
+
+            <div id="leadLijst"></div>
+
+        </section>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

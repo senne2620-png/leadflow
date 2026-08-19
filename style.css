@@ -1,0 +1,154 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    background: #f4f7f9;
+    color: #1f2933;
+}
+
+h1 {
+    color: #0b5ed7;
+    margin-bottom: 5px;
+}
+
+h2 {
+    margin-top: 30px;
+    color: #1f2933;
+}
+
+form,
+#resultaat,
+#dashboard {
+    background: white;
+    padding: 25px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    max-width: 900px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    max-width: 500px;
+    padding: 11px;
+    border: 1px solid #ccd5df;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+button {
+    padding: 10px 16px;
+    margin: 5px 5px 5px 0;
+    border: none;
+    border-radius: 7px;
+    background: #0b5ed7;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #084298;
+}
+
+#zoekbalk {
+    margin-bottom: 15px;
+}
+
+#zoekInput {
+    max-width: 600px;
+}
+
+#filters {
+    margin-bottom: 20px;
+}
+
+#statistieken {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 25px 0;
+}
+
+#statistieken div {
+    background: white;
+    border: 1px solid #dde3e8;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#statistieken strong {
+    display: block;
+    margin-bottom: 10px;
+    color: #66717c;
+}
+
+#statistieken span {
+    font-size: 32px;
+    font-weight: bold;
+    color: #0b5ed7;
+}
+
+#leadLijst {
+    display: grid;
+    gap: 15px;
+}
+
+#leadLijst > div {
+    background: #fafafa;
+    border: 1px solid #dde3e8;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+#leadLijst h3 {
+    margin-top: 0;
+    color: #0b5ed7;
+}
+
+.statusSelect {
+    margin-top: 8px;
+    margin-bottom: 10px;
+}
+
+#statusUitleg {
+    margin-top: 25px;
+    color: #66717c;
+}
+
+pre {
+    background: #f1f3f5;
+    padding: 15px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 15px;
+    }
+
+    #statistieken {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    form,
+    #resultaat,
+    #dashboard {
+        padding: 18px;
+    }
+}

@@ -10,6 +10,12 @@ import {
     doc
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
 
 // =========================
 // FIREBASE
@@ -25,12 +31,16 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
+
+const auth = getAuth(app);
+
 const leadsCollectie = collection(db, "leads");
 
 
 // =========================
-// WACHT TOT HTML GELADEN IS
+// HTML
 // =========================
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -75,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // LEADS UIT FIRESTORE LADEN
+    // LEADS LADEN
     // =========================
 
     async function laadLeads() {
@@ -110,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             alert(
-                "De leads konden niet uit Firestore worden geladen."
+                "De leads konden niet worden geladen."
             );
 
         }
@@ -119,44 +129,60 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // LOGIN
+    // LOGIN MET FIREBASE
     // =========================
 
-    loginKnop.addEventListener("click", async function () {
+    loginKnop.addEventListener(
+        "click",
+        async function () {
 
-        const gebruikersnaam =
-            document
-                .getElementById("gebruikersnaam")
-                .value
-                .trim();
+            const email =
+                document
+                    .getElementById("gebruikersnaam")
+                    .value
+                    .trim();
 
-        const wachtwoord =
-            document
-                .getElementById("wachtwoord")
-                .value;
+            const wachtwoord =
+                document
+                    .getElementById("wachtwoord")
+                    .value;
 
-
-        if (
-            gebruikersnaam === "admin" &&
-            wachtwoord === "leadflow"
-        ) {
-
-            loginScherm.style.display = "none";
-
-            appInhoud.style.display = "block";
 
             loginFout.textContent = "";
 
-            await laadLeads();
 
-        } else {
+            try {
 
-            loginFout.textContent =
-                "Gebruikersnaam of wachtwoord is niet juist.";
+                await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    wachtwoord
+                );
+
+
+                loginScherm.style.display = "none";
+
+                appInhoud.style.display = "block";
+
+
+                await laadLeads();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Login fout:",
+                    error
+                );
+
+
+                loginFout.textContent =
+                    "E-mailadres of wachtwoord is niet juist.";
+
+            }
 
         }
-
-    });
+    );
 
 
     // =========================
@@ -165,19 +191,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     uitloggenKnop.addEventListener(
         "click",
-        function () {
+        async function () {
 
-            appInhoud.style.display = "none";
+            try {
 
-            loginScherm.style.display = "block";
+                await signOut(auth);
 
-            document.getElementById(
-                "gebruikersnaam"
-            ).value = "";
+                appInhoud.style.display = "none";
 
-            document.getElementById(
-                "wachtwoord"
-            ).value = "";
+                loginScherm.style.display = "block";
+
+                document.getElementById(
+                    "gebruikersnaam"
+                ).value = "";
+
+                document.getElementById(
+                    "wachtwoord"
+                ).value = "";
+
+            } catch (error) {
+
+                console.error(
+                    "Uitloggen mislukt:",
+                    error
+                );
+
+            }
 
         }
     );
@@ -253,15 +292,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function classificatie(score) {
 
         if (score >= 70) {
-
             return "HOT";
-
         }
 
         if (score >= 40) {
-
             return "WARM";
-
         }
 
         return "COLD";
@@ -326,18 +361,23 @@ document.addEventListener("DOMContentLoaded", function () {
                         "postcode"
                     ).value.trim(),
 
-                urgentie: urgentie,
+                urgentie:
+                    urgentie,
 
-                budget: budget,
+                budget:
+                    budget,
 
-                project: project,
+                project:
+                    project,
 
-                score: score,
+                score:
+                    score,
 
                 classificatie:
                     classificatie(score),
 
-                status: "Nieuw"
+                status:
+                    "Nieuw"
 
             };
 
@@ -353,17 +393,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 leads.push({
 
-                    id: documentRef.id,
+                    id:
+                        documentRef.id,
 
                     ...nieuweLead
 
                 });
-
-
-                console.log(
-                    "Lead opgeslagen:",
-                    documentRef.id
-                );
 
 
                 leadFormulier.reset();
@@ -374,14 +409,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 alert(
-                    "Lead succesvol opgeslagen in Firestore!"
+                    "Lead succesvol opgeslagen!"
                 );
 
 
             } catch (error) {
 
                 console.error(
-                    "Fout bij opslaan van lead:",
+                    "Fout bij opslaan:",
                     error
                 );
 
@@ -569,18 +604,14 @@ document.addEventListener("DOMContentLoaded", function () {
                         await updateDoc(
                             leadRef,
                             {
-                                status: nieuweStatus
+                                status:
+                                    nieuweStatus
                             }
                         );
 
 
                         lead.status =
                             nieuweStatus;
-
-
-                        console.log(
-                            "Status bijgewerkt"
-                        );
 
 
                     } catch (error) {
@@ -621,9 +652,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                     if (!bevestiging) {
-
                         return;
-
                     }
 
 
@@ -655,11 +684,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         toonLeads();
 
                         updateStatistieken();
-
-
-                        console.log(
-                            "Lead verwijderd"
-                        );
 
 
                     } catch (error) {

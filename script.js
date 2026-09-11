@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             });
 
-            // Oude leads aanvullen als score ontbreekt
+            // Oude leads automatisch aanvullen
             leads = leads.map(function (lead) {
 
                 if (
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // SCORE
+    // SCORE BEREKENEN
     // =========================
 
     function berekenScore(
@@ -225,43 +225,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let score = 0;
 
+
         if (urgentie === "Vandaag") {
+
             score += 40;
-        }
 
-        else if (urgentie === "Deze week") {
+        } else if (urgentie === "Deze week") {
+
             score += 25;
-        }
 
-        else if (urgentie === "Later") {
+        } else if (urgentie === "Later") {
+
             score += 10;
+
         }
 
 
         if (budget === "Hoog") {
+
             score += 30;
-        }
 
-        else if (budget === "Middel") {
+        } else if (budget === "Middel") {
+
             score += 20;
-        }
 
-        else if (budget === "Laag") {
+        } else if (budget === "Laag") {
+
             score += 10;
+
         }
 
 
         if (project === "Grote installatie") {
+
             score += 30;
-        }
 
-        else if (project === "Nieuwe installatie") {
+        } else if (project === "Nieuwe installatie") {
+
             score += 20;
+
+        } else if (project === "Kleine reparatie") {
+
+            score += 10;
+
         }
 
-        else if (project === "Kleine reparatie") {
-            score += 10;
-        }
 
         return Math.min(score, 100);
 
@@ -300,6 +308,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let prioriteit = "";
 
 
+        // HOT
         if (score >= 70) {
 
             const redenen = [];
@@ -338,6 +347,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        // WARM
         else if (score >= 40) {
 
             reden =
@@ -351,6 +362,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
+
+        // COLD
         else {
 
             reden =
@@ -375,21 +388,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // CONCEPTMAIL
+    // CONCEPTMAIL GENEREREN
     // =========================
 
     function genereerMail(lead) {
 
-        let onderwerp =
-            "Bedankt voor uw aanvraag";
+        const onderwerp =
+            "Bedankt voor uw aanvraag bij Noord Installatie";
 
 
-        let bericht =
-            `Beste ${lead.naam || "klant"},
+        const bericht =
+`Beste ${lead.naam || "klant"},
 
 Bedankt voor uw aanvraag bij Noord Installatie.
 
-We hebben uw aanvraag goed ontvangen en nemen zo snel mogelijk contact met u op om uw wensen en de mogelijkheden te bespreken.
+We hebben uw aanvraag goed ontvangen. We nemen zo snel mogelijk contact met u op om uw wensen en de mogelijkheden te bespreken.
 
 Met vriendelijke groet,
 
@@ -413,6 +426,7 @@ Noord Installatie`;
         async function (event) {
 
             event.preventDefault();
+
 
             const urgentie =
                 document.getElementById(
@@ -578,16 +592,19 @@ Noord Installatie`;
             const kaart =
                 document.createElement("div");
 
+
             kaart.className =
                 "lead-kaart " +
                 (lead.classificatie || "cold")
                     .toLowerCase();
 
 
+            // Analyse maken
             const analyse =
                 genereerAnalyse(lead);
 
 
+            // Conceptmail maken
             const mail =
                 genereerMail(lead);
 
@@ -665,7 +682,7 @@ Noord Installatie`;
                     rows="8"
                 >${mail.bericht}</textarea>
 
-                <br>
+                <br><br>
 
                 <button class="kopieer-mail-knop">
                     Kopieer mail
@@ -674,7 +691,7 @@ Noord Installatie`;
                 <hr>
 
                 <label>
-                    Status:
+                    <strong>Status:</strong>
 
                     <select class="status-keuze">
 
@@ -742,7 +759,7 @@ Noord Installatie`;
                 async function () {
 
                     const volledigeMail =
-                        `Onderwerp: ${mail.onderwerp}
+`Onderwerp: ${mail.onderwerp}
 
 ${mail.bericht}`;
 
@@ -752,6 +769,7 @@ ${mail.bericht}`;
                         await navigator.clipboard.writeText(
                             volledigeMail
                         );
+
 
                         kopieerKnop.textContent =
                             "Mail gekopieerd ✓";

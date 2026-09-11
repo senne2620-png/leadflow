@@ -38,7 +38,7 @@ const leadsCollectie = collection(db, "leads");
 
 
 // =========================
-// HTML
+// START
 // =========================
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             });
 
-            // Oude leads automatisch aanvullen
+            // Oude leads aanvullen als score ontbreekt
             leads = leads.map(function (lead) {
 
                 if (
@@ -109,10 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
             toonLeads();
             updateStatistieken();
 
-            console.log(
-                "Leads geladen:",
-                leads
-            );
+            console.log("Leads geladen:", leads);
 
         } catch (error) {
 
@@ -217,7 +214,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // SCORE BEREKENEN
+    // SCORE
     // =========================
 
     function berekenScore(
@@ -266,7 +263,6 @@ document.addEventListener("DOMContentLoaded", function () {
             score += 10;
         }
 
-
         return Math.min(score, 100);
 
     }
@@ -292,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // SLIMME LEADANALYSE
+    // SLIMME ANALYSE
     // =========================
 
     function genereerAnalyse(lead) {
@@ -304,7 +300,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let prioriteit = "";
 
 
-        // HOT
         if (score >= 70) {
 
             const redenen = [];
@@ -343,24 +338,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
-
-        // WARM
         else if (score >= 40) {
 
-            if (
-                lead.urgentie === "Deze week" &&
-                lead.budget === "Middel"
-            ) {
-
-                reden =
-                    "Goede aankoopintentie met een gemiddelde urgentie en budget.";
-
-            } else {
-
-                reden =
-                    "Gemiddelde aankoopintentie.";
-
-            }
+            reden =
+                "Gemiddelde aankoopintentie.";
 
             advies =
                 "Neem binnen 1–2 dagen contact op.";
@@ -370,8 +351,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
-
-        // COLD
         else {
 
             reden =
@@ -396,6 +375,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
+    // CONCEPTMAIL
+    // =========================
+
+    function genereerMail(lead) {
+
+        let onderwerp =
+            "Bedankt voor uw aanvraag";
+
+
+        let bericht =
+            `Beste ${lead.naam || "klant"},
+
+Bedankt voor uw aanvraag bij Noord Installatie.
+
+We hebben uw aanvraag goed ontvangen en nemen zo snel mogelijk contact met u op om uw wensen en de mogelijkheden te bespreken.
+
+Met vriendelijke groet,
+
+Noord Installatie`;
+
+
+        return {
+            onderwerp: onderwerp,
+            bericht: bericht
+        };
+
+    }
+
+
+    // =========================
     // NIEUWE LEAD
     // =========================
 
@@ -404,7 +413,6 @@ document.addEventListener("DOMContentLoaded", function () {
         async function (event) {
 
             event.preventDefault();
-
 
             const urgentie =
                 document.getElementById(
@@ -570,7 +578,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const kaart =
                 document.createElement("div");
 
-
             kaart.className =
                 "lead-kaart " +
                 (lead.classificatie || "cold")
@@ -579,6 +586,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const analyse =
                 genereerAnalyse(lead);
+
+
+            const mail =
+                genereerMail(lead);
 
 
             kaart.innerHTML = `
@@ -639,6 +650,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 <hr>
 
+                <h4>
+                    Conceptmail
+                </h4>
+
+                <p>
+                    <strong>Onderwerp:</strong>
+                    ${mail.onderwerp}
+                </p>
+
+                <textarea
+                    class="conceptmail"
+                    readonly
+                    rows="8"
+                >${mail.bericht}</textarea>
+
+                <br>
+
+                <button class="kopieer-mail-knop">
+                    Kopieer mail
+                </button>
+
+                <hr>
+
                 <label>
                     Status:
 
@@ -691,6 +725,64 @@ document.addEventListener("DOMContentLoaded", function () {
                 </button>
 
             `;
+
+
+            // =========================
+            // KOPIEER MAIL
+            // =========================
+
+            const kopieerKnop =
+                kaart.querySelector(
+                    ".kopieer-mail-knop"
+                );
+
+
+            kopieerKnop.addEventListener(
+                "click",
+                async function () {
+
+                    const volledigeMail =
+                        `Onderwerp: ${mail.onderwerp}
+
+${mail.bericht}`;
+
+
+                    try {
+
+                        await navigator.clipboard.writeText(
+                            volledigeMail
+                        );
+
+                        kopieerKnop.textContent =
+                            "Mail gekopieerd ✓";
+
+
+                        setTimeout(
+                            function () {
+
+                                kopieerKnop.textContent =
+                                    "Kopieer mail";
+
+                            },
+                            2000
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Kopiëren mislukt:",
+                            error
+                        );
+
+                        alert(
+                            "De mail kon niet worden gekopieerd."
+                        );
+
+                    }
+
+                }
+            );
 
 
             // =========================

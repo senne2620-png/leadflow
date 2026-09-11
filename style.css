@@ -1,154 +1,450 @@
+/* =========================
+   ALGEMEEN
+========================= */
+
 * {
     box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    padding: 30px;
-    font-family: Arial, sans-serif;
-    background: #f4f7f9;
-    color: #1f2933;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    color: #172033;
 }
 
-h1 {
-    color: #0b5ed7;
-    margin-bottom: 5px;
-}
 
-h2 {
-    margin-top: 30px;
-    color: #1f2933;
-}
+/* =========================
+   LOGIN
+========================= */
 
-form,
-#resultaat,
-#dashboard {
-    background: white;
-    padding: 25px;
-    margin-top: 20px;
-    border-radius: 12px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-    max-width: 900px;
-}
-
-label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: bold;
-}
-
-input,
-select {
+#loginScherm {
     width: 100%;
-    max-width: 500px;
-    padding: 11px;
-    border: 1px solid #ccd5df;
-    border-radius: 7px;
+    max-width: 420px;
+    margin: 100px auto;
+    padding: 35px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+}
+
+#loginScherm h1 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 30px;
+}
+
+#loginScherm h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #667085;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+#loginScherm input {
+    width: 100%;
+    padding: 13px 14px;
+    margin-bottom: 14px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
     font-size: 15px;
 }
 
-button {
-    padding: 10px 16px;
-    margin: 5px 5px 5px 0;
+#loginScherm input:focus {
+    outline: none;
+    border-color: #1769e0;
+    box-shadow: 0 0 0 3px rgba(23, 105, 224, 0.1);
+}
+
+#loginKnop {
+    width: 100%;
+    padding: 13px;
     border: none;
-    border-radius: 7px;
-    background: #0b5ed7;
+    border-radius: 8px;
+    background: #1769e0;
     color: white;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
+}
+
+#loginKnop:hover {
+    background: #1258bd;
+}
+
+#loginFout {
+    margin-top: 15px;
+    color: #d92d20;
     font-size: 14px;
 }
 
-button:hover {
-    background: #084298;
+
+/* =========================
+   DASHBOARD
+========================= */
+
+#appInhoud {
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 30px;
 }
 
-#zoekbalk {
-    margin-bottom: 15px;
+#appInhoud h1 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 32px;
 }
 
-#zoekInput {
-    max-width: 600px;
+
+/* =========================
+   UITLOGGEN
+========================= */
+
+#uitloggenKnop {
+    float: right;
+    margin-top: -40px;
+    padding: 10px 18px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    background: white;
+    color: #344054;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-#filters {
-    margin-bottom: 20px;
+#uitloggenKnop:hover {
+    background: #f2f4f7;
 }
 
-#statistieken {
+
+/* =========================
+   STATISTIEKEN
+========================= */
+
+.statistieken {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin: 25px 0;
+    gap: 18px;
+    margin: 30px 0;
 }
 
-#statistieken div {
+.statistiek-kaart {
+    padding: 22px;
     background: white;
-    border: 1px solid #dde3e8;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
 
-#statistieken strong {
-    display: block;
-    margin-bottom: 10px;
-    color: #66717c;
+.statistiek-kaart h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #667085;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-#statistieken span {
+.statistiek-kaart p {
+    margin: 0;
     font-size: 32px;
     font-weight: bold;
-    color: #0b5ed7;
 }
+
+
+/* =========================
+   LEAD FORMULIER
+========================= */
+
+#leadFormulier {
+    padding: 25px;
+    margin-bottom: 30px;
+    background: white;
+    border: 1px solid #e4e7ec;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+#leadFormulier h2 {
+    margin-top: 0;
+}
+
+#leadFormulier input,
+#leadFormulier select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    margin-bottom: 15px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+#leadFormulier input:focus,
+#leadFormulier select:focus {
+    outline: none;
+    border-color: #1769e0;
+}
+
+#leadFormulier button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #1769e0;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#leadFormulier button:hover {
+    background: #1258bd;
+}
+
+
+/* =========================
+   ZOEKEN
+========================= */
+
+#zoekveld {
+    width: 100%;
+    padding: 13px 15px;
+    margin-bottom: 18px;
+    border: 1px solid #d0d5dd;
+    border-radius: 9px;
+    background: white;
+    font-size: 15px;
+}
+
+#zoekveld:focus {
+    outline: none;
+    border-color: #1769e0;
+}
+
+
+/* =========================
+   FILTERS
+========================= */
+
+[data-filter] {
+    padding: 9px 16px;
+    margin-right: 6px;
+    margin-bottom: 20px;
+    border: 1px solid #d0d5dd;
+    border-radius: 20px;
+    background: white;
+    color: #344054;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+[data-filter]:hover {
+    background: #f2f4f7;
+}
+
+
+/* =========================
+   LEAD LIJST
+========================= */
 
 #leadLijst {
     display: grid;
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
 }
 
-#leadLijst > div {
-    background: #fafafa;
-    border: 1px solid #dde3e8;
-    border-radius: 10px;
-    padding: 20px;
+
+/* =========================
+   LEAD KAART
+========================= */
+
+.lead-kaart {
+    padding: 24px;
+    background: white;
+    border: 1px solid #e4e7ec;
+    border-left: 6px solid #98a2b3;
+    border-radius: 14px;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.05);
 }
 
-#leadLijst h3 {
+.lead-kaart:hover {
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.lead-kaart h3 {
     margin-top: 0;
-    color: #0b5ed7;
+    margin-bottom: 18px;
+    font-size: 22px;
 }
 
-.statusSelect {
-    margin-top: 8px;
+.lead-kaart p {
+    line-height: 1.5;
+}
+
+
+/* =========================
+   HOT
+========================= */
+
+.lead-kaart.hot {
+    border-left-color: #e04444;
+}
+
+.lead-kaart.hot strong {
+    color: #c62828;
+}
+
+
+/* =========================
+   WARM
+========================= */
+
+.lead-kaart.warm {
+    border-left-color: #e5a000;
+}
+
+.lead-kaart.warm strong {
+    color: #b77900;
+}
+
+
+/* =========================
+   COLD
+========================= */
+
+.lead-kaart.cold {
+    border-left-color: #3683e8;
+}
+
+.lead-kaart.cold strong {
+    color: #1769e0;
+}
+
+
+/* =========================
+   SLIMME ANALYSE
+========================= */
+
+.lead-kaart h4 {
     margin-bottom: 10px;
+    font-size: 16px;
 }
 
-#statusUitleg {
-    margin-top: 25px;
-    color: #66717c;
+.lead-kaart hr {
+    border: none;
+    border-top: 1px solid #eaecf0;
+    margin: 22px 0;
 }
 
-pre {
-    background: #f1f3f5;
-    padding: 15px;
+
+/* =========================
+   CONCEPTMAIL
+========================= */
+
+.conceptmail {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d0d5dd;
     border-radius: 8px;
-    white-space: pre-wrap;
+    background: #f9fafb;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: vertical;
 }
 
-@media (max-width: 700px) {
+.kopieer-mail-knop {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #344054;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-    body {
-        padding: 15px;
+.kopieer-mail-knop:hover {
+    background: #1d2939;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-keuze {
+    min-width: 210px;
+    padding: 10px 12px;
+    margin-left: 6px;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+}
+
+
+/* =========================
+   VERWIJDEREN
+========================= */
+
+.verwijder-knop {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #1769e0;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.verwijder-knop:hover {
+    background: #1258bd;
+}
+
+
+/* =========================
+   MOBIEL
+========================= */
+
+@media (max-width: 800px) {
+
+    #appInhoud {
+        padding: 20px;
     }
 
-    #statistieken {
+    .statistieken {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    form,
-    #resultaat,
-    #dashboard {
-        padding: 18px;
+    #leadLijst {
+        grid-template-columns: 1fr;
     }
+
+}
+
+
+@media (max-width: 500px) {
+
+    #loginScherm {
+        margin: 30px 15px;
+        padding: 25px;
+    }
+
+    .statistieken {
+        grid-template-columns: 1fr;
+    }
+
+    #uitloggenKnop {
+        float: none;
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+
+    .status-keuze {
+        width: 100%;
+        margin: 8px 0 0 0;
+    }
+
 }

@@ -3,24 +3,38 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Noord Installatie LeadFlow</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 </head>
+
 
 <body>
 
-    <!-- LOGIN -->
+
+    <!-- =========================
+         LOGIN
+    ========================== -->
+
     <div id="loginScherm">
 
-        <h1>Noord Installatie</h1>
-        <h2>LeadFlow Login</h2>
+        <h1>
+            Noord Installatie
+        </h1>
 
-        <label for="gebruikersnaam">
-            E-mailadres
-        </label>
+        <h2>
+            LeadFlow Login
+        </h2>
+
 
         <input
             type="email"
@@ -28,9 +42,6 @@
             placeholder="E-mailadres"
         >
 
-        <label for="wachtwoord">
-            Wachtwoord
-        </label>
 
         <input
             type="password"
@@ -38,239 +49,299 @@
             placeholder="Wachtwoord"
         >
 
+
         <button id="loginKnop">
             Inloggen
         </button>
+
 
         <p id="loginFout"></p>
 
     </div>
 
 
-    <!-- DASHBOARD -->
-    <div id="appInhoud" style="display: none;">
 
-        <header>
+    <!-- =========================
+         DASHBOARD
+    ========================== -->
 
-            <h1>
-                Noord Installatie LeadFlow
-            </h1>
-
-            <button id="uitloggenKnop">
-                Uitloggen
-            </button>
-
-        </header>
+    <div
+        id="appInhoud"
+        style="display: none;"
+    >
 
 
-        <!-- LEAD AANMAKEN -->
-        <section>
-
-            <h2>Nieuwe lead</h2>
-
-            <form id="leadFormulier">
-
-                <input
-                    type="text"
-                    id="naam"
-                    placeholder="Naam"
-                    required
-                >
-
-                <input
-                    type="email"
-                    id="email"
-                    placeholder="E-mailadres"
-                    required
-                >
-
-                <input
-                    type="text"
-                    id="telefoon"
-                    placeholder="Telefoonnummer"
-                    required
-                >
-
-                <input
-                    type="text"
-                    id="postcode"
-                    placeholder="Postcode"
-                    required
-                >
-
-                <select id="urgentie" required>
-
-                    <option value="">
-                        Urgentie
-                    </option>
-
-                    <option value="Vandaag">
-                        Vandaag
-                    </option>
-
-                    <option value="Deze week">
-                        Deze week
-                    </option>
-
-                    <option value="Later">
-                        Later
-                    </option>
-
-                </select>
+        <h1>
+            Noord Installatie LeadFlow
+        </h1>
 
 
-                <select id="budget" required>
-
-                    <option value="">
-                        Budget
-                    </option>
-
-                    <option value="Hoog">
-                        Hoog
-                    </option>
-
-                    <option value="Middel">
-                        Middel
-                    </option>
-
-                    <option value="Laag">
-                        Laag
-                    </option>
-
-                </select>
+        <button id="uitloggenKnop">
+            Uitloggen
+        </button>
 
 
-                <select id="project" required>
 
-                    <option value="">
-                        Type project
-                    </option>
+        <!-- =========================
+             STATISTIEKEN
+        ========================== -->
 
-                    <option value="Grote installatie">
-                        Grote installatie
-                    </option>
-
-                    <option value="Nieuwe installatie">
-                        Nieuwe installatie
-                    </option>
-
-                    <option value="Kleine reparatie">
-                        Kleine reparatie
-                    </option>
-
-                </select>
+        <div class="statistieken">
 
 
-                <button type="submit">
-                    Lead analyseren
-                </button>
+            <div class="statistiek-kaart">
 
-            </form>
+                <h3>
+                    Totaal
+                </h3>
 
-        </section>
+                <p id="totaalLeads">
+                    0
+                </p>
+
+            </div>
 
 
-        <!-- ZOEKEN -->
-        <section>
+            <div class="statistiek-kaart">
 
-            <h2>Leads</h2>
+                <h3>
+                    HOT
+                </h3>
+
+                <p id="hotLeads">
+                    0
+                </p>
+
+            </div>
+
+
+            <div class="statistiek-kaart">
+
+                <h3>
+                    WARM
+                </h3>
+
+                <p id="warmLeads">
+                    0
+                </p>
+
+            </div>
+
+
+            <div class="statistiek-kaart">
+
+                <h3>
+                    COLD
+                </h3>
+
+                <p id="coldLeads">
+                    0
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             NIEUWE LEAD
+        ========================== -->
+
+        <form id="leadFormulier">
+
+            <h2>
+                Nieuwe lead
+            </h2>
+
+
+            <label>
+                Naam
+            </label>
 
             <input
                 type="text"
-                id="zoekveld"
-                placeholder="Zoek op naam, e-mail of postcode"
+                id="naam"
+                placeholder="Naam klant"
+                required
             >
 
-        </section>
+
+            <label>
+                E-mail
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                placeholder="E-mailadres"
+                required
+            >
 
 
-        <!-- FILTERS -->
-        <section id="filters">
+            <label>
+                Telefoon
+            </label>
+
+            <input
+                type="text"
+                id="telefoon"
+                placeholder="Telefoonnummer"
+            >
+
+
+            <label>
+                Postcode
+            </label>
+
+            <input
+                type="text"
+                id="postcode"
+                placeholder="Bijvoorbeeld 9201BP"
+            >
+
+
+            <label>
+                Urgentie
+            </label>
+
+            <select id="urgentie" required>
+
+                <option value="">
+                    Kies urgentie
+                </option>
+
+                <option value="Vandaag">
+                    Vandaag
+                </option>
+
+                <option value="Deze week">
+                    Deze week
+                </option>
+
+                <option value="Later">
+                    Later
+                </option>
+
+            </select>
+
+
+            <label>
+                Budget
+            </label>
+
+            <select id="budget" required>
+
+                <option value="">
+                    Kies budget
+                </option>
+
+                <option value="Hoog">
+                    Hoog
+                </option>
+
+                <option value="Middel">
+                    Middel
+                </option>
+
+                <option value="Laag">
+                    Laag
+                </option>
+
+            </select>
+
+
+            <label>
+                Project
+            </label>
+
+            <select id="project" required>
+
+                <option value="">
+                    Kies project
+                </option>
+
+                <option value="Grote installatie">
+                    Grote installatie
+                </option>
+
+                <option value="Nieuwe installatie">
+                    Nieuwe installatie
+                </option>
+
+                <option value="Kleine reparatie">
+                    Kleine reparatie
+                </option>
+
+            </select>
+
+
+            <button type="submit">
+                Lead analyseren
+            </button>
+
+        </form>
+
+
+
+        <!-- =========================
+             ZOEKEN
+        ========================== -->
+
+        <input
+            type="text"
+            id="zoekveld"
+            placeholder="Zoek op naam, e-mail of postcode..."
+        >
+
+
+
+        <!-- =========================
+             FILTERS
+        ========================== -->
+
+        <div class="filters">
 
             <button data-filter="ALLE">
                 Alle
             </button>
 
             <button data-filter="HOT">
-                HOT 🔥
+                HOT
             </button>
 
             <button data-filter="WARM">
-                WARM 🟠
+                WARM
             </button>
 
             <button data-filter="COLD">
-                COLD 🔵
+                COLD
             </button>
 
-        </section>
+        </div>
 
 
-        <!-- STATISTIEKEN -->
-        <section id="statistieken">
 
-            <div class="stat-kaart">
+        <!-- =========================
+             LEADS
+        ========================== -->
 
-                <h3>Totaal</h3>
+        <div id="leadLijst"></div>
 
-                <span id="totaalLeads">
-                    0
-                </span>
-
-            </div>
-
-
-            <div class="stat-kaart">
-
-                <h3>HOT</h3>
-
-                <span id="hotLeads">
-                    0
-                </span>
-
-            </div>
-
-
-            <div class="stat-kaart">
-
-                <h3>WARM</h3>
-
-                <span id="warmLeads">
-                    0
-                </span>
-
-            </div>
-
-
-            <div class="stat-kaart">
-
-                <h3>COLD</h3>
-
-                <span id="coldLeads">
-                    0
-                </span>
-
-            </div>
-
-        </section>
-
-
-        <!-- LEADLIJST -->
-        <section>
-
-            <div id="leadLijst"></div>
-
-        </section>
 
     </div>
 
 
-    <!-- BELANGRIJK:
-         type="module" omdat script.js Firebase imports gebruikt -->
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
     <script
         type="module"
-        src="script.js">
-    </script>
+        src="script.js"
+    ></script>
+
 
 </body>
 

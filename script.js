@@ -31,9 +31,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
-
 const auth = getAuth(app);
 
 const leadsCollectie = collection(db, "leads");
@@ -45,41 +43,18 @@ const leadsCollectie = collection(db, "leads");
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const loginScherm =
-        document.getElementById("loginScherm");
-
-    const appInhoud =
-        document.getElementById("appInhoud");
-
-    const loginKnop =
-        document.getElementById("loginKnop");
-
-    const loginFout =
-        document.getElementById("loginFout");
-
-    const uitloggenKnop =
-        document.getElementById("uitloggenKnop");
-
-    const leadFormulier =
-        document.getElementById("leadFormulier");
-
-    const leadLijst =
-        document.getElementById("leadLijst");
-
-    const zoekveld =
-        document.getElementById("zoekveld");
-
+    const loginScherm = document.getElementById("loginScherm");
+    const appInhoud = document.getElementById("appInhoud");
+    const loginKnop = document.getElementById("loginKnop");
+    const loginFout = document.getElementById("loginFout");
+    const uitloggenKnop = document.getElementById("uitloggenKnop");
+    const leadFormulier = document.getElementById("leadFormulier");
+    const leadLijst = document.getElementById("leadLijst");
+    const zoekveld = document.getElementById("zoekveld");
 
     let leads = [];
-
     let huidigeFilter = "ALLE";
-
     let zoekterm = "";
-
-
-    // =========================
-    // START
-    // =========================
 
     appInhoud.style.display = "none";
 
@@ -92,8 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
 
-            const snapshot =
-                await getDocs(leadsCollectie);
+            const snapshot = await getDocs(leadsCollectie);
 
             leads = snapshot.docs.map(function (document) {
 
@@ -104,11 +78,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
             });
 
+            // Oude leads automatisch aanvullen
+            leads = leads.map(function (lead) {
+
+                if (
+                    lead.score === undefined &&
+                    lead.urgentie &&
+                    lead.budget &&
+                    lead.project
+                ) {
+
+                    const score = berekenScore(
+                        lead.urgentie,
+                        lead.budget,
+                        lead.project
+                    );
+
+                    return {
+                        ...lead,
+                        score: score,
+                        classificatie: classificatie(score)
+                    };
+
+                }
+
+                return lead;
+
+            });
+
             toonLeads();
             updateStatistieken();
 
             console.log(
-                "Leads geladen uit Firestore:",
+                "Leads geladen:",
                 leads
             );
 
@@ -129,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // LOGIN MET FIREBASE
+    // LOGIN
     // =========================
 
     loginKnop.addEventListener(
@@ -147,9 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     .getElementById("wachtwoord")
                     .value;
 
-
             loginFout.textContent = "";
-
 
             try {
 
@@ -159,14 +159,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     wachtwoord
                 );
 
-
                 loginScherm.style.display = "none";
-
                 appInhoud.style.display = "block";
 
-
                 await laadLeads();
-
 
             } catch (error) {
 
@@ -174,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Login fout:",
                     error
                 );
-
 
                 loginFout.textContent =
                     "E-mailadres of wachtwoord is niet juist.";
@@ -198,7 +193,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 await signOut(auth);
 
                 appInhoud.style.display = "none";
-
                 loginScherm.style.display = "block";
 
                 document.getElementById(
@@ -234,49 +228,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let score = 0;
 
-
         if (urgentie === "Vandaag") {
-
             score += 40;
+        }
 
-        } else if (urgentie === "Deze week") {
-
+        else if (urgentie === "Deze week") {
             score += 25;
+        }
 
-        } else if (urgentie === "Later") {
-
+        else if (urgentie === "Later") {
             score += 10;
-
         }
 
 
         if (budget === "Hoog") {
-
             score += 30;
+        }
 
-        } else if (budget === "Middel") {
-
+        else if (budget === "Middel") {
             score += 20;
+        }
 
-        } else if (budget === "Laag") {
-
+        else if (budget === "Laag") {
             score += 10;
-
         }
 
 
         if (project === "Grote installatie") {
-
             score += 30;
+        }
 
-        } else if (project === "Nieuwe installatie") {
-
+        else if (project === "Nieuwe installatie") {
             score += 20;
+        }
 
-        } else if (project === "Kleine reparatie") {
-
+        else if (project === "Kleine reparatie") {
             score += 10;
-
         }
 
 
@@ -300,6 +287,110 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         return "COLD";
+
+    }
+
+
+    // =========================
+    // SLIMME LEADANALYSE
+    // =========================
+
+    function genereerAnalyse(lead) {
+
+        const score = Number(lead.score || 0);
+
+        let reden = "";
+        let advies = "";
+        let prioriteit = "";
+
+
+        // HOT
+        if (score >= 70) {
+
+            const redenen = [];
+
+            if (lead.urgentie === "Vandaag") {
+                redenen.push("vandaag nodig");
+            }
+
+            if (lead.budget === "Hoog") {
+                redenen.push("hoog budget");
+            }
+
+            if (lead.project === "Grote installatie") {
+                redenen.push("grote installatie");
+            }
+
+            if (redenen.length > 0) {
+
+                reden =
+                    "Hoge aankoopintentie: " +
+                    redenen.join(" + ") +
+                    ".";
+
+            } else {
+
+                reden =
+                    "Deze lead heeft een hoge aankoopintentie.";
+
+            }
+
+            advies =
+                "Neem vandaag telefonisch contact op.";
+
+            prioriteit =
+                "Zeer hoog";
+
+        }
+
+
+        // WARM
+        else if (score >= 40) {
+
+            if (
+                lead.urgentie === "Deze week" &&
+                lead.budget === "Middel"
+            ) {
+
+                reden =
+                    "Goede aankoopintentie met een gemiddelde urgentie en budget.";
+
+            } else {
+
+                reden =
+                    "Gemiddelde aankoopintentie.";
+
+            }
+
+            advies =
+                "Neem binnen 1–2 dagen contact op.";
+
+            prioriteit =
+                "Gemiddeld";
+
+        }
+
+
+        // COLD
+        else {
+
+            reden =
+                "Lage aankoopintentie of lage urgentie.";
+
+            advies =
+                "Volg deze lead later op.";
+
+            prioriteit =
+                "Laag";
+
+        }
+
+
+        return {
+            reden: reden,
+            advies: advies,
+            prioriteit: prioriteit
+        };
 
     }
 
@@ -404,7 +495,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 leadFormulier.reset();
 
                 toonLeads();
-
                 updateStatistieken();
 
 
@@ -487,9 +577,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     .toLowerCase();
 
 
+            const analyse =
+                genereerAnalyse(lead);
+
+
             kaart.innerHTML = `
 
-                <h3>${lead.naam || ""}</h3>
+                <h3>
+                    ${lead.naam || ""}
+                </h3>
 
                 <p>
                     E-mail:
@@ -516,9 +612,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 <p>
                     Classificatie:
                     <strong>
-                        ${lead.classificatie || ""}
+                        ${lead.classificatie || "Onbekend"}
                     </strong>
                 </p>
+
+                <hr>
+
+                <h4>
+                    Slimme analyse
+                </h4>
+
+                <p>
+                    <strong>Waarom:</strong>
+                    ${analyse.reden}
+                </p>
+
+                <p>
+                    <strong>Advies:</strong>
+                    ${analyse.advies}
+                </p>
+
+                <p>
+                    <strong>Prioriteit:</strong>
+                    ${analyse.prioriteit}
+                </p>
+
+                <hr>
 
                 <label>
                     Status:
@@ -526,7 +645,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     <select class="status-keuze">
 
                         <option value="Nieuw"
-                            ${lead.status === "Nieuw"
+                            ${lead.status === "Nieuw" ||
+                            lead.status === "nieuw"
                                 ? "selected"
                                 : ""}>
                             Nieuw
@@ -682,7 +802,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                         toonLeads();
-
                         updateStatistieken();
 
 

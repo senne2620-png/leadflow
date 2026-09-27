@@ -127,13 +127,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             try {
+const gebruiker = auth.currentUser;
 
+if (!gebruiker) {
+    throw new Error("Je bent niet ingelogd.");
+}
+
+const idToken = await gebruiker.getIdToken();
                 const response = await fetch(AI_URL, {
                     method: "POST",
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                   headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${idToken}`
+},
 
                     body: JSON.stringify(leadGegevens)
                 });

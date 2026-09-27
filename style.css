@@ -1,0 +1,268 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    background: #f4f7f9;
+    color: #1f2933;
+}
+
+h1 {
+    color: #0b5ed7;
+    margin-bottom: 5px;
+}
+
+h2 {
+    margin-top: 30px;
+    color: #1f2933;
+}
+
+h4 {
+    margin-bottom: 10px;
+}
+
+
+/* =========================
+   FORMULIER
+========================= */
+
+form,
+#resultaat,
+#dashboard {
+    background: white;
+    padding: 25px;
+    margin-top: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    max-width: 900px;
+}
+
+#leadFormulier {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    padding: 11px;
+    border: 1px solid #ccd5df;
+    border-radius: 7px;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    background: white;
+}
+
+textarea {
+    min-height: 110px;
+    resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid #0b5ed7;
+    outline-offset: 1px;
+}
+
+
+/* =========================
+   KNOPPEN
+========================= */
+
+button {
+    padding: 10px 16px;
+    margin: 5px 5px 5px 0;
+    border: none;
+    border-radius: 7px;
+    background: #0b5ed7;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #084298;
+}
+
+button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+#analyseKnop {
+    align-self: flex-start;
+}
+
+#analyseStatus {
+    margin: 5px 0 0;
+    font-weight: bold;
+}
+
+
+/* =========================
+   ZOEKEN EN FILTERS
+========================= */
+
+#zoekveld {
+    max-width: 600px;
+}
+
+#filters {
+    margin: 15px 0 20px;
+}
+
+
+/* =========================
+   STATISTIEKEN
+========================= */
+
+#statistieken {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin: 25px 0;
+}
+
+#statistieken div {
+    background: white;
+    border: 1px solid #dde3e8;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#statistieken h3 {
+    margin-top: 0;
+}
+
+#statistieken span {
+    font-size: 32px;
+    font-weight: bold;
+    color: #0b5ed7;
+}
+
+
+/* =========================
+   LEADS
+========================= */
+
+#leadLijst {
+    display: grid;
+    gap: 18px;
+}
+
+.lead-kaart {
+    background: white;
+    border: 1px solid #dde3e8;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.lead-kaart h3 {
+    margin-top: 0;
+    color: #0b5ed7;
+}
+
+.lead-kaart p {
+    line-height: 1.5;
+}
+
+.lead-kaart hr {
+    border: none;
+    border-top: 1px solid #dde3e8;
+    margin: 20px 0;
+}
+
+.lead-kaart.hot {
+    border-left: 6px solid #dc3545;
+}
+
+.lead-kaart.warm {
+    border-left: 6px solid #fd7e14;
+}
+
+.lead-kaart.cold {
+    border-left: 6px solid #0d6efd;
+}
+
+
+/* =========================
+   AI CONCEPTMAIL
+========================= */
+
+.conceptmail {
+    margin: 20px 0;
+    padding: 18px;
+    background: #f4f7f9;
+    border-radius: 10px;
+}
+
+.conceptmail h4 {
+    margin-top: 0;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-keuze {
+    margin-top: 8px;
+    max-width: 300px;
+}
+
+
+/* =========================
+   OVERIG
+========================= */
+
+pre {
+    background: #f1f3f5;
+    padding: 15px;
+    border-radius: 8px;
+    white-space: pre-wrap;
+}
+
+
+/* =========================
+   MOBIEL
+========================= */
+
+@media (max-width: 700px) {
+
+    body {
+        padding: 15px;
+    }
+
+    #statistieken {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    form,
+    #resultaat,
+    #dashboard {
+        padding: 18px;
+    }
+
+    input,
+    select,
+    textarea {
+        max-width: 100%;
+    }
+}

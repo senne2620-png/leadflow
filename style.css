@@ -1,3 +1,7 @@
+/* =========================
+   BASIS
+========================= */
+
 * {
     box-sizing: border-box;
 }
@@ -22,6 +26,51 @@ h2 {
 
 h4 {
     margin-bottom: 10px;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    margin: 0;
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+#loginScherm {
+    max-width: 500px;
+    margin: 60px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+#loginScherm h1,
+#loginScherm h2 {
+    margin-top: 0;
+}
+
+#loginScherm input {
+    margin-bottom: 15px;
+}
+
+#loginFout {
+    color: #dc3545;
+    font-weight: bold;
 }
 
 
@@ -158,47 +207,175 @@ button:disabled {
 
 
 /* =========================
-   LEADS
+   PIPELINE
 ========================= */
 
-#leadLijst {
-    display: grid;
-    gap: 18px;
+#pipelineSectie {
+    margin-top: 30px;
 }
+
+#leadLijst {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+.pipeline {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(280px, 1fr));
+    gap: 16px;
+    min-width: 1480px;
+    align-items: start;
+}
+
+
+/* =========================
+   PIPELINE KOLOMMEN
+========================= */
+
+.pipeline-kolom {
+    background: #e9eef3;
+    border: 1px solid #d6dee6;
+    border-radius: 12px;
+    padding: 12px;
+    min-height: 350px;
+}
+
+.pipeline-kolom-kop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 4px;
+}
+
+.pipeline-kolom-kop h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #1f2933;
+}
+
+.pipeline-kolom-kop span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 20px;
+    background: white;
+    color: #0b5ed7;
+    font-weight: bold;
+    border: 1px solid #d6dee6;
+}
+
+.pipeline-kaarten {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pipeline-leeg {
+    margin: 10px 4px;
+    color: #6c757d;
+    font-size: 14px;
+    text-align: center;
+}
+
+
+/* =========================
+   LEADKAART
+========================= */
 
 .lead-kaart {
     background: white;
     border: 1px solid #dde3e8;
-    border-radius: 12px;
-    padding: 22px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    overflow-wrap: anywhere;
 }
 
 .lead-kaart h3 {
-    margin-top: 0;
+    margin: 0;
     color: #0b5ed7;
+    font-size: 17px;
 }
 
 .lead-kaart p {
-    line-height: 1.5;
-}
-
-.lead-kaart hr {
-    border: none;
-    border-top: 1px solid #dde3e8;
-    margin: 20px 0;
+    line-height: 1.45;
+    font-size: 14px;
+    margin: 8px 0;
 }
 
 .lead-kaart.hot {
-    border-left: 6px solid #dc3545;
+    border-left: 5px solid #dc3545;
 }
 
 .lead-kaart.warm {
-    border-left: 6px solid #fd7e14;
+    border-left: 5px solid #fd7e14;
 }
 
 .lead-kaart.cold {
-    border-left: 6px solid #0d6efd;
+    border-left: 5px solid #0d6efd;
+}
+
+
+/* =========================
+   LEADKAART BOVENKANT
+========================= */
+
+.lead-kaart-boven {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+
+/* =========================
+   HOT / WARM / COLD BADGES
+========================= */
+
+.lead-badge {
+    display: inline-block;
+    padding: 5px 8px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.lead-badge.hot {
+    background: #f8d7da;
+    color: #842029;
+}
+
+.lead-badge.warm {
+    background: #fff3cd;
+    color: #664d03;
+}
+
+.lead-badge.cold {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+
+/* =========================
+   EXTRA LEADINFORMATIE
+========================= */
+
+.lead-extra {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #e4e9ed;
+}
+
+.lead-extra p {
+    margin-bottom: 0;
 }
 
 
@@ -207,24 +384,45 @@ button:disabled {
 ========================= */
 
 .conceptmail {
-    margin: 20px 0;
-    padding: 18px;
+    margin: 15px 0;
+    padding: 13px;
     background: #f4f7f9;
-    border-radius: 10px;
+    border-radius: 8px;
 }
 
 .conceptmail h4 {
     margin-top: 0;
 }
 
+.kopieer-mail-knop {
+    width: 100%;
+    margin-top: 8px;
+}
+
 
 /* =========================
-   STATUS
+   LEAD ACTIES
 ========================= */
+
+.lead-acties {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #dde3e8;
+}
 
 .status-keuze {
     margin-top: 8px;
-    max-width: 300px;
+    max-width: 100%;
+}
+
+.verwijder-knop {
+    width: 100%;
+    margin-top: 12px;
+    background: #dc3545;
+}
+
+.verwijder-knop:hover {
+    background: #b02a37;
 }
 
 
@@ -241,6 +439,18 @@ pre {
 
 
 /* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+
+    #statistieken {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+/* =========================
    MOBIEL
 ========================= */
 
@@ -248,6 +458,11 @@ pre {
 
     body {
         padding: 15px;
+    }
+
+    header {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     #statistieken {
@@ -264,5 +479,18 @@ pre {
     select,
     textarea {
         max-width: 100%;
+    }
+
+    .pipeline {
+        grid-template-columns: repeat(
+            5,
+            270px
+        );
+
+        min-width: max-content;
+    }
+
+    .pipeline-kolom {
+        min-height: 300px;
     }
 }

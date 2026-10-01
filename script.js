@@ -33,9 +33,7 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
-
 const db = getFirestore(app);
 
 
@@ -85,9 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     let leads = [];
-
     let huidigeFilter = "ALLE";
-
     let zoekterm = "";
 
 
@@ -116,7 +112,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             toonLeads();
-
             updateStatistieken();
 
         } catch (error) {
@@ -157,9 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
             loginFout.textContent = "";
 
             loginKnop.disabled = true;
-
-            loginKnop.textContent =
-                "Inloggen...";
+            loginKnop.textContent = "Inloggen...";
 
 
             try {
@@ -183,9 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } finally {
 
                 loginKnop.disabled = false;
-
-                loginKnop.textContent =
-                    "Inloggen";
+                loginKnop.textContent = "Inloggen";
             }
         }
     );
@@ -224,12 +215,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (gebruiker) {
 
-                loginScherm.style.display =
-                    "none";
-
-                appInhoud.style.display =
-                    "block";
-
+                loginScherm.style.display = "none";
+                appInhoud.style.display = "block";
                 loginFout.textContent = "";
 
                 await laadLeadsUitFirestore();
@@ -239,14 +226,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 leads = [];
 
                 toonLeads();
-
                 updateStatistieken();
 
-                appInhoud.style.display =
-                    "none";
-
-                loginScherm.style.display =
-                    "block";
+                appInhoud.style.display = "none";
+                loginScherm.style.display = "block";
 
                 document
                     .getElementById("wachtwoord")
@@ -317,9 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             analyseKnop.disabled = true;
-
-            analyseKnop.textContent =
-                "AI analyseert...";
+            analyseKnop.textContent = "AI analyseert...";
 
             analyseStatus.textContent =
                 "De AI analyseert deze lead...";
@@ -327,9 +308,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             try {
 
-                // =========================
                 // FIREBASE TOKEN
-                // =========================
 
                 const gebruiker =
                     auth.currentUser;
@@ -347,9 +326,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     await gebruiker.getIdToken();
 
 
-                // =========================
                 // AI AANROEP
-                // =========================
 
                 const response =
                     await fetch(
@@ -391,9 +368,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                // =========================
                 // AI ANTWOORD CONTROLEREN
-                // =========================
 
                 if (
                     typeof analyse.score !== "number" ||
@@ -413,9 +388,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                // =========================
-                // NIEUWE LEAD MAKEN
-                // =========================
+                // NIEUWE LEAD
 
                 const nieuweLead = {
 
@@ -454,9 +427,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 };
 
 
-                // =========================
-                // OPSLAAN IN FIRESTORE
-                // =========================
+                // FIRESTORE OPSLAAN
 
                 const documentReferentie =
                     await addDoc(
@@ -469,10 +440,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     documentReferentie.id;
 
 
-                leads.push(
-                    nieuweLead
-                );
-
+                leads.push(nieuweLead);
 
                 leadFormulier.reset();
 
@@ -486,7 +454,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 toonLeads();
-
                 updateStatistieken();
 
 
@@ -505,8 +472,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             } finally {
 
-                analyseKnop.disabled =
-                    false;
+                analyseKnop.disabled = false;
 
                 analyseKnop.textContent =
                     "Lead analyseren met AI";
@@ -522,7 +488,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function escapeHtml(waarde) {
 
         return String(
-            waarde || ""
+            waarde ?? ""
         )
             .replaceAll("&", "&amp;")
             .replaceAll("<", "&lt;")
@@ -533,7 +499,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // LEADS TONEN
+    // PIPELINE TONEN
     // =========================
 
     function toonLeads() {
@@ -541,622 +507,746 @@ document.addEventListener("DOMContentLoaded", function () {
         leadLijst.innerHTML = "";
 
 
-        const zichtbareLeads =
-            leads.filter(
-                function (lead) {
+        const statussen = [
+            "Nieuw",
+            "Contact opgenomen",
+            "Afspraak gepland",
+            "Gewonnen",
+            "Verloren"
+        ];
 
-                    const filterKlopt =
 
-                        huidigeFilter === "ALLE" ||
+        const pipeline =
+            document.createElement("div");
 
-                        lead.classificatie ===
-                            huidigeFilter;
+        pipeline.className = "pipeline";
 
 
-                    const zoek =
-                        zoekterm.toLowerCase();
+        statussen.forEach(
+            function (status) {
 
+                const kolom =
+                    document.createElement("div");
 
-                    const naam =
-                        (
-                            lead.naam || ""
-                        ).toLowerCase();
+                kolom.className =
+                    "pipeline-kolom";
 
 
-                    const email =
-                        (
-                            lead.email || ""
-                        ).toLowerCase();
+                const kolomTitel =
+                    document.createElement("div");
 
+                kolomTitel.className =
+                    "pipeline-kolom-kop";
 
-                    const telefoon =
-                        (
-                            lead.telefoon || ""
-                        ).toLowerCase();
 
+                const titel =
+                    document.createElement("h3");
 
-                    const postcode =
-                        (
-                            lead.postcode || ""
-                        ).toLowerCase();
+                titel.textContent = status;
 
 
-                    const zoekKlopt =
+                const aantal =
+                    document.createElement("span");
 
-                        naam.includes(zoek) ||
 
-                        email.includes(zoek) ||
+                const leadsInKolom =
+                    leads.filter(
+                        function (lead) {
 
-                        telefoon.includes(zoek) ||
+                            const leadStatus =
+                                lead.status || "Nieuw";
 
-                        postcode.includes(zoek);
-
-
-                    return (
-                        filterKlopt &&
-                        zoekKlopt
-                    );
-                }
-            );
-
-
-        zichtbareLeads.forEach(
-            function (lead) {
-
-                const kaart =
-                    document.createElement(
-                        "div"
-                    );
-
-
-                const leadClassificatie =
-
-                    [
-                        "HOT",
-                        "WARM",
-                        "COLD"
-                    ].includes(
-                        lead.classificatie
-                    )
-
-                        ? lead.classificatie
-
-                        : "COLD";
-
-
-                kaart.className =
-
-                    "lead-kaart " +
-
-                    leadClassificatie
-                        .toLowerCase();
-
-
-                kaart.innerHTML = `
-
-                    <h3>
-                        ${escapeHtml(
-                            lead.naam
-                        )}
-                    </h3>
-
-                    <p>
-                        E-mail:
-                        ${escapeHtml(
-                            lead.email
-                        )}
-                    </p>
-
-                    <p>
-                        Telefoon:
-                        ${escapeHtml(
-                            lead.telefoon
-                        )}
-                    </p>
-
-                    <p>
-                        Postcode:
-                        ${escapeHtml(
-                            lead.postcode
-                        )}
-                    </p>
-
-                    <p>
-                        Project:
-                        ${escapeHtml(
-                            lead.project
-                        )}
-                    </p>
-
-                    <p>
-                        Urgentie:
-                        ${escapeHtml(
-                            lead.urgentie
-                        )}
-                    </p>
-
-                    <p>
-                        Budget:
-                        ${escapeHtml(
-                            lead.budget
-                        )}
-                    </p>
-
-
-                    ${
-                        lead.bericht
-
-                            ? `
-                                <p>
-                                    <strong>
-                                        Bericht:
-                                    </strong>
-
-                                    <br>
-
-                                    ${escapeHtml(
-                                        lead.bericht
-                                    )}
-                                </p>
-                            `
-
-                            : ""
-                    }
-
-
-                    <hr>
-
-
-                    <h4>
-                        AI-analyse
-                    </h4>
-
-
-                    <p>
-                        Score:
-
-                        <strong>
-                            ${escapeHtml(
-                                lead.score
-                            )}/100
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        Classificatie:
-
-                        <strong>
-                            ${escapeHtml(
-                                leadClassificatie
-                            )}
-                        </strong>
-                    </p>
-
-
-                    ${
-                        lead.prioriteit
-
-                            ? `
-                                <p>
-                                    Prioriteit:
-
-                                    <strong>
-                                        ${escapeHtml(
-                                            lead.prioriteit
-                                        )}
-                                    </strong>
-                                </p>
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        lead.reden
-
-                            ? `
-                                <p>
-                                    <strong>
-                                        Waarom:
-                                    </strong>
-
-                                    <br>
-
-                                    ${escapeHtml(
-                                        lead.reden
-                                    )}
-                                </p>
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        lead.advies
-
-                            ? `
-                                <p>
-                                    <strong>
-                                        Opvolgadvies:
-                                    </strong>
-
-                                    <br>
-
-                                    ${escapeHtml(
-                                        lead.advies
-                                    )}
-                                </p>
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        lead.emailBericht
-
-                            ? `
-                                <div class="conceptmail">
-
-                                    <h4>
-                                        AI-conceptmail
-                                    </h4>
-
-                                    <p>
-                                        <strong>
-                                            Onderwerp:
-                                        </strong>
-
-                                        <br>
-
-                                        ${escapeHtml(
-                                            lead.emailOnderwerp
-                                        )}
-                                    </p>
-
-                                    <p>
-                                        ${escapeHtml(
-                                            lead.emailBericht
-                                        )}
-                                    </p>
-
-                                    <button
-                                        type="button"
-                                        class="kopieer-mail-knop"
-                                    >
-                                        Kopieer conceptmail
-                                    </button>
-
-                                </div>
-                            `
-
-                            : ""
-                    }
-
-
-                    <br>
-
-
-                    <label>
-
-                        Status:
-
-                        <select
-                            class="status-keuze"
-                        >
-
-                            <option
-                                value="Nieuw"
-                                ${
-                                    lead.status === "Nieuw" ||
-                                    lead.status === "nieuw"
-
-                                        ? "selected"
-
-                                        : ""
-                                }
-                            >
-                                Nieuw
-                            </option>
-
-
-                            <option
-                                value="Contact opgenomen"
-                                ${
-                                    lead.status ===
-                                        "Contact opgenomen"
-
-                                        ? "selected"
-
-                                        : ""
-                                }
-                            >
-                                Contact opgenomen
-                            </option>
-
-
-                            <option
-                                value="Afspraak gepland"
-                                ${
-                                    lead.status ===
-                                        "Afspraak gepland"
-
-                                        ? "selected"
-
-                                        : ""
-                                }
-                            >
-                                Afspraak gepland
-                            </option>
-
-
-                            <option
-                                value="Gewonnen"
-                                ${
-                                    lead.status ===
-                                        "Gewonnen"
-
-                                        ? "selected"
-
-                                        : ""
-                                }
-                            >
-                                Gewonnen
-                            </option>
-
-
-                            <option
-                                value="Verloren"
-                                ${
-                                    lead.status ===
-                                        "Verloren"
-
-                                        ? "selected"
-
-                                        : ""
-                                }
-                            >
-                                Verloren
-                            </option>
-
-                        </select>
-
-                    </label>
-
-
-                    <br><br>
-
-
-                    <button
-                        class="verwijder-knop"
-                    >
-                        Verwijder lead
-                    </button>
-                `;
-
-
-                // =========================
-                // STATUS IN FIRESTORE
-                // =========================
-
-                const statusKeuze =
-                    kaart.querySelector(
-                        ".status-keuze"
-                    );
-
-
-                statusKeuze.addEventListener(
-                    "change",
-                    async function () {
-
-                        const oudeStatus =
-                            lead.status;
-
-                        const nieuweStatus =
-                            this.value;
-
-
-                        try {
-
-                            await updateDoc(
-                                doc(
-                                    db,
-                                    "leads",
-                                    lead.id
-                                ),
-                                {
-                                    status:
-                                        nieuweStatus
-                                }
-                            );
-
-
-                            lead.status =
-                                nieuweStatus;
-
-
-                        } catch (error) {
-
-                            console.error(
-                                "Status opslaan mislukt:",
-                                error
-                            );
-
-
-                            lead.status =
-                                oudeStatus;
-
-
-                            this.value =
-                                oudeStatus || "Nieuw";
-
-
-                            alert(
-                                "De status kon niet worden opgeslagen."
+                            return (
+                                leadStatus === status &&
+                                voldoetAanFilter(lead)
                             );
                         }
-                    }
-                );
-
-
-                // =========================
-                // CONCEPTMAIL KOPIËREN
-                // =========================
-
-                const kopieerKnop =
-                    kaart.querySelector(
-                        ".kopieer-mail-knop"
                     );
 
 
-                if (kopieerKnop) {
+                aantal.textContent =
+                    leadsInKolom.length;
 
-                    kopieerKnop.addEventListener(
-                        "click",
-                        async function () {
 
-                            const mailTekst =
+                kolomTitel.appendChild(titel);
+                kolomTitel.appendChild(aantal);
 
-                                "Onderwerp: " +
+                kolom.appendChild(kolomTitel);
 
-                                (
-                                    lead.emailOnderwerp ||
-                                    ""
-                                ) +
 
-                                "\n\n" +
+                const kaartenContainer =
+                    document.createElement("div");
 
-                                (
-                                    lead.emailBericht ||
-                                    ""
+                kaartenContainer.className =
+                    "pipeline-kaarten";
+
+
+                if (leadsInKolom.length === 0) {
+
+                    const leeg =
+                        document.createElement("p");
+
+                    leeg.className =
+                        "pipeline-leeg";
+
+                    leeg.textContent =
+                        "Geen leads";
+
+                    kaartenContainer.appendChild(
+                        leeg
+                    );
+
+                } else {
+
+                    leadsInKolom.forEach(
+                        function (lead) {
+
+                            const kaart =
+                                maakLeadKaart(
+                                    lead
                                 );
 
-
-                            try {
-
-                                await navigator
-                                    .clipboard
-                                    .writeText(
-                                        mailTekst
-                                    );
-
-
-                                const oudeTekst =
-                                    kopieerKnop
-                                        .textContent;
-
-
-                                kopieerKnop.textContent =
-                                    "Gekopieerd!";
-
-
-                                setTimeout(
-                                    function () {
-
-                                        kopieerKnop
-                                            .textContent =
-                                            oudeTekst;
-
-                                    },
-                                    1500
+                            kaartenContainer
+                                .appendChild(
+                                    kaart
                                 );
-
-
-                            } catch (error) {
-
-                                console.error(
-                                    "Kopiëren mislukt:",
-                                    error
-                                );
-
-
-                                alert(
-                                    "De conceptmail kon niet worden gekopieerd."
-                                );
-                            }
                         }
                     );
                 }
 
 
-                // =========================
-                // VERWIJDEREN UIT FIRESTORE
-                // =========================
-
-                const verwijderKnop =
-                    kaart.querySelector(
-                        ".verwijder-knop"
-                    );
-
-
-                verwijderKnop.addEventListener(
-                    "click",
-                    async function () {
-
-                        const bevestiging =
-                            confirm(
-                                "Weet je zeker dat je deze lead wilt verwijderen?"
-                            );
-
-
-                        if (!bevestiging) {
-
-                            return;
-                        }
-
-
-                        try {
-
-                            await deleteDoc(
-                                doc(
-                                    db,
-                                    "leads",
-                                    lead.id
-                                )
-                            );
-
-
-                            leads =
-                                leads.filter(
-                                    function (item) {
-
-                                        return (
-                                            item.id !==
-                                            lead.id
-                                        );
-                                    }
-                                );
-
-
-                            toonLeads();
-
-                            updateStatistieken();
-
-
-                        } catch (error) {
-
-                            console.error(
-                                "Lead verwijderen mislukt:",
-                                error
-                            );
-
-
-                            alert(
-                                "De lead kon niet worden verwijderd."
-                            );
-                        }
-                    }
+                kolom.appendChild(
+                    kaartenContainer
                 );
 
 
-                leadLijst.appendChild(
-                    kaart
+                pipeline.appendChild(
+                    kolom
                 );
             }
         );
+
+
+        leadLijst.appendChild(
+            pipeline
+        );
+    }
+
+
+    // =========================
+    // FILTER + ZOEKEN
+    // =========================
+
+    function voldoetAanFilter(lead) {
+
+        const filterKlopt =
+
+            huidigeFilter === "ALLE" ||
+
+            lead.classificatie ===
+                huidigeFilter;
+
+
+        const zoek =
+            zoekterm.toLowerCase();
+
+
+        const naam =
+            (
+                lead.naam || ""
+            ).toLowerCase();
+
+
+        const email =
+            (
+                lead.email || ""
+            ).toLowerCase();
+
+
+        const telefoon =
+            (
+                lead.telefoon || ""
+            ).toLowerCase();
+
+
+        const postcode =
+            (
+                lead.postcode || ""
+            ).toLowerCase();
+
+
+        const zoekKlopt =
+
+            naam.includes(zoek) ||
+
+            email.includes(zoek) ||
+
+            telefoon.includes(zoek) ||
+
+            postcode.includes(zoek);
+
+
+        return (
+            filterKlopt &&
+            zoekKlopt
+        );
+    }
+
+
+    // =========================
+    // LEADKAART MAKEN
+    // =========================
+
+    function maakLeadKaart(lead) {
+
+        const kaart =
+            document.createElement("div");
+
+
+        const leadClassificatie =
+
+            [
+                "HOT",
+                "WARM",
+                "COLD"
+            ].includes(
+                lead.classificatie
+            )
+
+                ? lead.classificatie
+
+                : "COLD";
+
+
+        kaart.className =
+
+            "lead-kaart " +
+
+            leadClassificatie
+                .toLowerCase();
+
+
+        kaart.innerHTML = `
+
+            <div class="lead-kaart-boven">
+
+                <h3>
+                    ${escapeHtml(
+                        lead.naam
+                    )}
+                </h3>
+
+                <span class="lead-badge ${leadClassificatie.toLowerCase()}">
+
+                    ${escapeHtml(
+                        leadClassificatie
+                    )}
+
+                </span>
+
+            </div>
+
+
+            <p>
+                <strong>Score:</strong>
+                ${escapeHtml(
+                    lead.score
+                )}/100
+            </p>
+
+
+            <p>
+                <strong>Project:</strong>
+                ${escapeHtml(
+                    lead.project
+                )}
+            </p>
+
+
+            <p>
+                <strong>Urgentie:</strong>
+                ${escapeHtml(
+                    lead.urgentie
+                )}
+            </p>
+
+
+            <p>
+                <strong>Budget:</strong>
+                ${escapeHtml(
+                    lead.budget
+                )}
+            </p>
+
+
+            <p>
+                <strong>E-mail:</strong>
+                ${escapeHtml(
+                    lead.email
+                )}
+            </p>
+
+
+            <p>
+                <strong>Telefoon:</strong>
+                ${escapeHtml(
+                    lead.telefoon
+                )}
+            </p>
+
+
+            <p>
+                <strong>Postcode:</strong>
+                ${escapeHtml(
+                    lead.postcode
+                )}
+            </p>
+
+
+            ${
+                lead.bericht
+
+                    ? `
+                        <div class="lead-extra">
+
+                            <strong>
+                                Bericht:
+                            </strong>
+
+                            <p>
+                                ${escapeHtml(
+                                    lead.bericht
+                                )}
+                            </p>
+
+                        </div>
+                    `
+
+                    : ""
+            }
+
+
+            ${
+                lead.reden
+
+                    ? `
+                        <div class="lead-extra">
+
+                            <strong>
+                                Waarom:
+                            </strong>
+
+                            <p>
+                                ${escapeHtml(
+                                    lead.reden
+                                )}
+                            </p>
+
+                        </div>
+                    `
+
+                    : ""
+            }
+
+
+            ${
+                lead.advies
+
+                    ? `
+                        <div class="lead-extra">
+
+                            <strong>
+                                Opvolgadvies:
+                            </strong>
+
+                            <p>
+                                ${escapeHtml(
+                                    lead.advies
+                                )}
+                            </p>
+
+                        </div>
+                    `
+
+                    : ""
+            }
+
+
+            ${
+                lead.emailBericht
+
+                    ? `
+                        <div class="conceptmail">
+
+                            <h4>
+                                AI-conceptmail
+                            </h4>
+
+                            <p>
+                                <strong>
+                                    Onderwerp:
+                                </strong>
+
+                                <br>
+
+                                ${escapeHtml(
+                                    lead.emailOnderwerp
+                                )}
+                            </p>
+
+                            <p>
+                                ${escapeHtml(
+                                    lead.emailBericht
+                                )}
+                            </p>
+
+                            <button
+                                type="button"
+                                class="kopieer-mail-knop"
+                            >
+                                Kopieer conceptmail
+                            </button>
+
+                        </div>
+                    `
+
+                    : ""
+            }
+
+
+            <div class="lead-acties">
+
+                <label>
+
+                    Status:
+
+                    <select
+                        class="status-keuze"
+                    >
+
+                        <option
+                            value="Nieuw"
+                            ${
+                                lead.status === "Nieuw" ||
+                                lead.status === "nieuw" ||
+                                !lead.status
+
+                                    ? "selected"
+
+                                    : ""
+                            }
+                        >
+                            Nieuw
+                        </option>
+
+
+                        <option
+                            value="Contact opgenomen"
+                            ${
+                                lead.status ===
+                                    "Contact opgenomen"
+
+                                    ? "selected"
+
+                                    : ""
+                            }
+                        >
+                            Contact opgenomen
+                        </option>
+
+
+                        <option
+                            value="Afspraak gepland"
+                            ${
+                                lead.status ===
+                                    "Afspraak gepland"
+
+                                    ? "selected"
+
+                                    : ""
+                            }
+                        >
+                            Afspraak gepland
+                        </option>
+
+
+                        <option
+                            value="Gewonnen"
+                            ${
+                                lead.status ===
+                                    "Gewonnen"
+
+                                    ? "selected"
+
+                                    : ""
+                            }
+                        >
+                            Gewonnen
+                        </option>
+
+
+                        <option
+                            value="Verloren"
+                            ${
+                                lead.status ===
+                                    "Verloren"
+
+                                    ? "selected"
+
+                                    : ""
+                            }
+                        >
+                            Verloren
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <button
+                    type="button"
+                    class="verwijder-knop"
+                >
+                    Verwijder lead
+                </button>
+
+            </div>
+        `;
+
+
+        // =========================
+        // STATUS WIJZIGEN
+        // =========================
+
+        const statusKeuze =
+            kaart.querySelector(
+                ".status-keuze"
+            );
+
+
+        statusKeuze.addEventListener(
+            "change",
+            async function () {
+
+                const oudeStatus =
+                    lead.status || "Nieuw";
+
+                const nieuweStatus =
+                    this.value;
+
+
+                this.disabled = true;
+
+
+                try {
+
+                    await updateDoc(
+                        doc(
+                            db,
+                            "leads",
+                            lead.id
+                        ),
+                        {
+                            status:
+                                nieuweStatus
+                        }
+                    );
+
+
+                    lead.status =
+                        nieuweStatus;
+
+
+                    toonLeads();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Status opslaan mislukt:",
+                        error
+                    );
+
+
+                    lead.status =
+                        oudeStatus;
+
+
+                    this.value =
+                        oudeStatus;
+
+
+                    alert(
+                        "De status kon niet worden opgeslagen."
+                    );
+
+                } finally {
+
+                    this.disabled = false;
+                }
+            }
+        );
+
+
+        // =========================
+        // CONCEPTMAIL KOPIËREN
+        // =========================
+
+        const kopieerKnop =
+            kaart.querySelector(
+                ".kopieer-mail-knop"
+            );
+
+
+        if (kopieerKnop) {
+
+            kopieerKnop.addEventListener(
+                "click",
+                async function () {
+
+                    const mailTekst =
+
+                        "Onderwerp: " +
+
+                        (
+                            lead.emailOnderwerp ||
+                            ""
+                        ) +
+
+                        "\n\n" +
+
+                        (
+                            lead.emailBericht ||
+                            ""
+                        );
+
+
+                    try {
+
+                        await navigator
+                            .clipboard
+                            .writeText(
+                                mailTekst
+                            );
+
+
+                        const oudeTekst =
+                            kopieerKnop
+                                .textContent;
+
+
+                        kopieerKnop.textContent =
+                            "Gekopieerd!";
+
+
+                        setTimeout(
+                            function () {
+
+                                kopieerKnop
+                                    .textContent =
+                                    oudeTekst;
+
+                            },
+                            1500
+                        );
+
+
+                    } catch (error) {
+
+                        console.error(
+                            "Kopiëren mislukt:",
+                            error
+                        );
+
+
+                        alert(
+                            "De conceptmail kon niet worden gekopieerd."
+                        );
+                    }
+                }
+            );
+        }
+
+
+        // =========================
+        // LEAD VERWIJDEREN
+        // =========================
+
+        const verwijderKnop =
+            kaart.querySelector(
+                ".verwijder-knop"
+            );
+
+
+        verwijderKnop.addEventListener(
+            "click",
+            async function () {
+
+                const bevestiging =
+                    confirm(
+                        "Weet je zeker dat je deze lead wilt verwijderen?"
+                    );
+
+
+                if (!bevestiging) {
+
+                    return;
+                }
+
+
+                verwijderKnop.disabled =
+                    true;
+
+
+                try {
+
+                    await deleteDoc(
+                        doc(
+                            db,
+                            "leads",
+                            lead.id
+                        )
+                    );
+
+
+                    leads =
+                        leads.filter(
+                            function (item) {
+
+                                return (
+                                    item.id !==
+                                    lead.id
+                                );
+                            }
+                        );
+
+
+                    toonLeads();
+                    updateStatistieken();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Lead verwijderen mislukt:",
+                        error
+                    );
+
+
+                    verwijderKnop.disabled =
+                        false;
+
+
+                    alert(
+                        "De lead kon niet worden verwijderd."
+                    );
+                }
+            }
+        );
+
+
+        return kaart;
     }
 
 

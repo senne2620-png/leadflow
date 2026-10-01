@@ -11,6 +11,16 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
     apiKey: "AIzaSyA9CMAh0JDZFh0pIbQP_5oX4ZzbR8IwNl0",
@@ -26,17 +36,14 @@ const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
+const db = getFirestore(app);
+
 
 // =========================
 // START APP
 // =========================
 
 document.addEventListener("DOMContentLoaded", function () {
-
-
-    // =========================
-    // INSTELLINGEN
-    // =========================
 
     const AI_URL =
         "https://leadflow-ai.senne2620.workers.dev/";
@@ -77,18 +84,52 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("analyseStatus");
 
 
-    // =========================
-    // LEADS LADEN
-    // =========================
-
-    let leads =
-        JSON.parse(
-            localStorage.getItem("leadflowLeads")
-        ) || [];
+    let leads = [];
 
     let huidigeFilter = "ALLE";
 
     let zoekterm = "";
+
+
+    // =========================
+    // FIRESTORE LEADS LADEN
+    // =========================
+
+    async function laadLeadsUitFirestore() {
+
+        try {
+
+            const snapshot =
+                await getDocs(
+                    collection(db, "leads")
+                );
+
+            leads = [];
+
+            snapshot.forEach(function (documentSnapshot) {
+
+                leads.push({
+                    id: documentSnapshot.id,
+                    ...documentSnapshot.data()
+                });
+
+            });
+
+            toonLeads();
+
+            updateStatistieken();
+
+        } catch (error) {
+
+            console.error(
+                "Leads laden mislukt:",
+                error
+            );
+
+            analyseStatus.textContent =
+                "Leads konden niet uit Firestore worden geladen.";
+        }
+    }
 
 
     // =========================
@@ -174,12 +215,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // LOGINSTATUS CONTROLEREN
+    // LOGINSTATUS
     // =========================
 
     onAuthStateChanged(
         auth,
-        function (gebruiker) {
+        async function (gebruiker) {
 
             if (gebruiker) {
 
@@ -191,11 +232,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 loginFout.textContent = "";
 
+                await laadLeadsUitFirestore();
+
+            } else {
+
+                leads = [];
+
                 toonLeads();
 
                 updateStatistieken();
-
-            } else {
 
                 appInhoud.style.display =
                     "none";
@@ -283,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
 
                 // =========================
-                // FIREBASE TOKEN OPHALEN
+                // FIREBASE TOKEN
                 // =========================
 
                 const gebruiker =
@@ -351,8 +396,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // =========================
 
                 if (
-                    typeof analyse.score !==
-                        "number" ||
+                    typeof analyse.score !== "number" ||
 
                     ![
                         "HOT",
@@ -370,12 +414,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 // =========================
-                // NIEUWE LEAD
+                // NIEUWE LEAD MAKEN
                 // =========================
 
                 const nieuweLead = {
-
-                    id: Date.now(),
 
                     ...leadGegevens,
 
@@ -412,12 +454,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 };
 
 
+                // =========================
+                // OPSLAAN IN FIRESTORE
+                // =========================
+
+                const documentReferentie =
+                    await addDoc(
+                        collection(db, "leads"),
+                        nieuweLead
+                    );
+
+
+                nieuweLead.id =
+                    documentReferentie.id;
+
+
                 leads.push(
                     nieuweLead
                 );
-
-
-                slaLeadsOp();
 
 
                 leadFormulier.reset();
@@ -439,7 +493,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } catch (error) {
 
                 console.error(
-                    "LeadFlow AI fout:",
+                    "LeadFlow fout:",
                     error
                 );
 
@@ -462,19 +516,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // OPSLAAN
-    // =========================
-
-    function slaLeadsOp() {
-
-        localStorage.setItem(
-            "leadflowLeads",
-            JSON.stringify(leads)
-        );
-    }
-
-
-    // =========================
     // HTML VEILIG TONEN
     // =========================
 
@@ -483,26 +524,11 @@ document.addEventListener("DOMContentLoaded", function () {
         return String(
             waarde || ""
         )
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-            .replaceAll(
-                "'",
-                "&#039;"
-            );
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
     }
 
 
@@ -521,8 +547,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     const filterKlopt =
 
-                        huidigeFilter ===
-                            "ALLE" ||
+                        huidigeFilter === "ALLE" ||
 
                         lead.classificatie ===
                             huidigeFilter;
@@ -615,14 +640,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         )}
                     </h3>
 
-
                     <p>
                         E-mail:
                         ${escapeHtml(
                             lead.email
                         )}
                     </p>
-
 
                     <p>
                         Telefoon:
@@ -631,14 +654,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         )}
                     </p>
 
-
                     <p>
                         Postcode:
                         ${escapeHtml(
                             lead.postcode
                         )}
                     </p>
-
 
                     <p>
                         Project:
@@ -647,14 +668,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         )}
                     </p>
 
-
                     <p>
                         Urgentie:
                         ${escapeHtml(
                             lead.urgentie
                         )}
                     </p>
-
 
                     <p>
                         Budget:
@@ -669,7 +688,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             ? `
                                 <p>
-
                                     <strong>
                                         Bericht:
                                     </strong>
@@ -679,7 +697,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                     ${escapeHtml(
                                         lead.bericht
                                     )}
-
                                 </p>
                             `
 
@@ -696,32 +713,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                     <p>
-
                         Score:
 
                         <strong>
-
                             ${escapeHtml(
                                 lead.score
                             )}/100
-
                         </strong>
-
                     </p>
 
 
                     <p>
-
                         Classificatie:
 
                         <strong>
-
                             ${escapeHtml(
                                 leadClassificatie
                             )}
-
                         </strong>
-
                     </p>
 
 
@@ -730,17 +739,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             ? `
                                 <p>
-
                                     Prioriteit:
 
                                     <strong>
-
                                         ${escapeHtml(
                                             lead.prioriteit
                                         )}
-
                                     </strong>
-
                                 </p>
                             `
 
@@ -753,7 +758,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             ? `
                                 <p>
-
                                     <strong>
                                         Waarom:
                                     </strong>
@@ -763,7 +767,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                     ${escapeHtml(
                                         lead.reden
                                     )}
-
                                 </p>
                             `
 
@@ -776,7 +779,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                             ? `
                                 <p>
-
                                     <strong>
                                         Opvolgadvies:
                                     </strong>
@@ -786,7 +788,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                     ${escapeHtml(
                                         lead.advies
                                     )}
-
                                 </p>
                             `
 
@@ -804,9 +805,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         AI-conceptmail
                                     </h4>
 
-
                                     <p>
-
                                         <strong>
                                             Onderwerp:
                                         </strong>
@@ -816,26 +815,19 @@ document.addEventListener("DOMContentLoaded", function () {
                                         ${escapeHtml(
                                             lead.emailOnderwerp
                                         )}
-
                                     </p>
 
-
                                     <p>
-
                                         ${escapeHtml(
                                             lead.emailBericht
                                         )}
-
                                     </p>
-
 
                                     <button
                                         type="button"
                                         class="kopieer-mail-knop"
                                     >
-
                                         Kopieer conceptmail
-
                                     </button>
 
                                 </div>
@@ -852,36 +844,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         Status:
 
-
                         <select
                             class="status-keuze"
                         >
 
-
                             <option
                                 value="Nieuw"
-
                                 ${
-                                    lead.status ===
-                                        "Nieuw" ||
-
-                                    lead.status ===
-                                        "nieuw"
+                                    lead.status === "Nieuw" ||
+                                    lead.status === "nieuw"
 
                                         ? "selected"
 
                                         : ""
                                 }
                             >
-
                                 Nieuw
-
                             </option>
 
 
                             <option
                                 value="Contact opgenomen"
-
                                 ${
                                     lead.status ===
                                         "Contact opgenomen"
@@ -891,15 +874,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                         : ""
                                 }
                             >
-
                                 Contact opgenomen
-
                             </option>
 
 
                             <option
                                 value="Afspraak gepland"
-
                                 ${
                                     lead.status ===
                                         "Afspraak gepland"
@@ -909,15 +889,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                         : ""
                                 }
                             >
-
                                 Afspraak gepland
-
                             </option>
 
 
                             <option
                                 value="Gewonnen"
-
                                 ${
                                     lead.status ===
                                         "Gewonnen"
@@ -927,15 +904,12 @@ document.addEventListener("DOMContentLoaded", function () {
                                         : ""
                                 }
                             >
-
                                 Gewonnen
-
                             </option>
 
 
                             <option
                                 value="Verloren"
-
                                 ${
                                     lead.status ===
                                         "Verloren"
@@ -945,9 +919,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                         : ""
                                 }
                             >
-
                                 Verloren
-
                             </option>
 
                         </select>
@@ -961,15 +933,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     <button
                         class="verwijder-knop"
                     >
-
                         Verwijder lead
-
                     </button>
                 `;
 
 
                 // =========================
-                // STATUS OPSLAAN
+                // STATUS IN FIRESTORE
                 // =========================
 
                 const statusKeuze =
@@ -980,12 +950,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 statusKeuze.addEventListener(
                     "change",
-                    function () {
+                    async function () {
 
-                        lead.status =
+                        const oudeStatus =
+                            lead.status;
+
+                        const nieuweStatus =
                             this.value;
 
-                        slaLeadsOp();
+
+                        try {
+
+                            await updateDoc(
+                                doc(
+                                    db,
+                                    "leads",
+                                    lead.id
+                                ),
+                                {
+                                    status:
+                                        nieuweStatus
+                                }
+                            );
+
+
+                            lead.status =
+                                nieuweStatus;
+
+
+                        } catch (error) {
+
+                            console.error(
+                                "Status opslaan mislukt:",
+                                error
+                            );
+
+
+                            lead.status =
+                                oudeStatus;
+
+
+                            this.value =
+                                oudeStatus || "Nieuw";
+
+
+                            alert(
+                                "De status kon niet worden opgeslagen."
+                            );
+                        }
                     }
                 );
 
@@ -1071,7 +1083,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 // =========================
-                // VERWIJDEREN
+                // VERWIJDEREN UIT FIRESTORE
                 // =========================
 
                 const verwijderKnop =
@@ -1082,7 +1094,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 verwijderKnop.addEventListener(
                     "click",
-                    function () {
+                    async function () {
 
                         const bevestiging =
                             confirm(
@@ -1096,23 +1108,46 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
 
 
-                        leads =
-                            leads.filter(
-                                function (item) {
+                        try {
 
-                                    return (
-                                        item.id !==
-                                        lead.id
-                                    );
-                                }
+                            await deleteDoc(
+                                doc(
+                                    db,
+                                    "leads",
+                                    lead.id
+                                )
                             );
 
 
-                        slaLeadsOp();
+                            leads =
+                                leads.filter(
+                                    function (item) {
 
-                        toonLeads();
+                                        return (
+                                            item.id !==
+                                            lead.id
+                                        );
+                                    }
+                                );
 
-                        updateStatistieken();
+
+                            toonLeads();
+
+                            updateStatistieken();
+
+
+                        } catch (error) {
+
+                            console.error(
+                                "Lead verwijderen mislukt:",
+                                error
+                            );
+
+
+                            alert(
+                                "De lead kon niet worden verwijderd."
+                            );
+                        }
                     }
                 );
 
@@ -1247,14 +1282,5 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         );
     }
-
-
-    // =========================
-    // START
-    // =========================
-
-    toonLeads();
-
-    updateStatistieken();
 
 });

@@ -21,7 +21,6 @@ import {
     doc
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-
 const firebaseConfig = {
     apiKey: "AIzaSyA9CMAh0JDZFh0pIbQP_5oX4ZzbR8IwNl0",
     authDomain: "leadflow-47ab3.firebaseapp.com",
@@ -30,7 +29,6 @@ const firebaseConfig = {
     messagingSenderId: "169270287112",
     appId: "1:169270287112:web:662da5bb112acd449eeabd"
 };
-
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -45,11 +43,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const AI_URL =
         "https://leadflow-ai.senne2620.workers.dev/";
-
-
-    // =========================
-    // ELEMENTEN
-    // =========================
 
     const loginScherm =
         document.getElementById("loginScherm");
@@ -81,14 +74,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const analyseStatus =
         document.getElementById("analyseStatus");
 
-
     let leads = [];
     let huidigeFilter = "ALLE";
     let zoekterm = "";
 
+    const statussen = [
+        "Nieuw",
+        "Contact opgenomen",
+        "Afspraak gepland",
+        "Gewonnen",
+        "Verloren"
+    ];
+
 
     // =========================
-    // FIRESTORE LEADS LADEN
+    // FIRESTORE LADEN
     // =========================
 
     async function laadLeadsUitFirestore() {
@@ -108,7 +108,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     id: documentSnapshot.id,
                     ...documentSnapshot.data()
                 });
-
             });
 
             toonLeads();
@@ -122,17 +121,16 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             analyseStatus.textContent =
-                "Leads konden niet uit Firestore worden geladen.";
+                "Leads konden niet worden geladen.";
         }
     }
 
 
     // =========================
-    // FIREBASE LOGIN
+    // LOGIN
     // =========================
 
     appInhoud.style.display = "none";
-
 
     loginKnop.addEventListener(
         "click",
@@ -154,7 +152,6 @@ document.addEventListener("DOMContentLoaded", function () {
             loginKnop.disabled = true;
             loginKnop.textContent = "Inloggen...";
 
-
             try {
 
                 await signInWithEmailAndPassword(
@@ -165,10 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             } catch (error) {
 
-                console.error(
-                    "Inloggen mislukt:",
-                    error
-                );
+                console.error(error);
 
                 loginFout.textContent =
                     "E-mailadres of wachtwoord is niet juist.";
@@ -217,7 +211,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 loginScherm.style.display = "none";
                 appInhoud.style.display = "block";
-                loginFout.textContent = "";
 
                 await laadLeadsUitFirestore();
 
@@ -248,7 +241,6 @@ document.addEventListener("DOMContentLoaded", function () {
         async function (event) {
 
             event.preventDefault();
-
 
             const leadGegevens = {
 
@@ -298,21 +290,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         .trim()
             };
 
-
             analyseKnop.disabled = true;
-            analyseKnop.textContent = "AI analyseert...";
+            analyseKnop.textContent =
+                "AI analyseert...";
 
             analyseStatus.textContent =
                 "De AI analyseert deze lead...";
 
-
             try {
-
-                // FIREBASE TOKEN
 
                 const gebruiker =
                     auth.currentUser;
-
 
                 if (!gebruiker) {
 
@@ -321,12 +309,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
                 }
 
-
                 const idToken =
                     await gebruiker.getIdToken();
-
-
-                // AI AANROEP
 
                 const response =
                     await fetch(
@@ -335,7 +319,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             method: "POST",
 
                             headers: {
-
                                 "Content-Type":
                                     "application/json",
 
@@ -350,29 +333,20 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                     );
 
-
                 const analyse =
                     await response.json();
-
 
                 if (!response.ok) {
 
                     throw new Error(
-
                         analyse.details ||
-
                         analyse.error ||
-
                         "AI-analyse mislukt."
                     );
                 }
 
-
-                // AI ANTWOORD CONTROLEREN
-
                 if (
                     typeof analyse.score !== "number" ||
-
                     ![
                         "HOT",
                         "WARM",
@@ -386,9 +360,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         "De AI gaf geen geldige analyse terug."
                     );
                 }
-
-
-                // NIEUWE LEAD
 
                 const nieuweLead = {
 
@@ -426,24 +397,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     status: "Nieuw"
                 };
 
-
-                // FIRESTORE OPSLAAN
-
                 const documentReferentie =
                     await addDoc(
                         collection(db, "leads"),
                         nieuweLead
                     );
 
-
                 nieuweLead.id =
                     documentReferentie.id;
-
 
                 leads.push(nieuweLead);
 
                 leadFormulier.reset();
-
 
                 analyseStatus.textContent =
                     "AI-analyse voltooid: " +
@@ -452,10 +417,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     nieuweLead.score +
                     "/100)";
 
-
                 toonLeads();
                 updateStatistieken();
-
 
             } catch (error) {
 
@@ -464,11 +427,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     error
                 );
 
-
                 analyseStatus.textContent =
                     "AI-analyse mislukt: " +
                     error.message;
-
 
             } finally {
 
@@ -487,14 +448,115 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function escapeHtml(waarde) {
 
-        return String(
-            waarde ?? ""
-        )
+        return String(waarde ?? "")
             .replaceAll("&", "&amp;")
             .replaceAll("<", "&lt;")
             .replaceAll(">", "&gt;")
             .replaceAll('"', "&quot;")
             .replaceAll("'", "&#039;");
+    }
+
+
+    // =========================
+    // FILTER
+    // =========================
+
+    function voldoetAanFilter(lead) {
+
+        const filterKlopt =
+            huidigeFilter === "ALLE" ||
+            lead.classificatie ===
+                huidigeFilter;
+
+        const zoek =
+            zoekterm.toLowerCase();
+
+        const naam =
+            (lead.naam || "")
+                .toLowerCase();
+
+        const email =
+            (lead.email || "")
+                .toLowerCase();
+
+        const telefoon =
+            (lead.telefoon || "")
+                .toLowerCase();
+
+        const postcode =
+            (lead.postcode || "")
+                .toLowerCase();
+
+        const zoekKlopt =
+            naam.includes(zoek) ||
+            email.includes(zoek) ||
+            telefoon.includes(zoek) ||
+            postcode.includes(zoek);
+
+        return (
+            filterKlopt &&
+            zoekKlopt
+        );
+    }
+
+
+    // =========================
+    // STATUS OPSLAAN
+    // =========================
+
+    async function wijzigLeadStatus(
+        lead,
+        nieuweStatus
+    ) {
+
+        const oudeStatus =
+            lead.status || "Nieuw";
+
+        if (
+            oudeStatus === nieuweStatus
+        ) {
+            return true;
+        }
+
+        try {
+
+            await updateDoc(
+                doc(
+                    db,
+                    "leads",
+                    lead.id
+                ),
+                {
+                    status:
+                        nieuweStatus
+                }
+            );
+
+            lead.status =
+                nieuweStatus;
+
+            toonLeads();
+
+            return true;
+
+        } catch (error) {
+
+            console.error(
+                "Status opslaan mislukt:",
+                error
+            );
+
+            lead.status =
+                oudeStatus;
+
+            toonLeads();
+
+            alert(
+                "De status kon niet worden opgeslagen."
+            );
+
+            return false;
+        }
     }
 
 
@@ -506,21 +568,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         leadLijst.innerHTML = "";
 
-
-        const statussen = [
-            "Nieuw",
-            "Contact opgenomen",
-            "Afspraak gepland",
-            "Gewonnen",
-            "Verloren"
-        ];
-
-
         const pipeline =
             document.createElement("div");
 
-        pipeline.className = "pipeline";
-
+        pipeline.className =
+            "pipeline";
 
         statussen.forEach(
             function (status) {
@@ -531,6 +583,85 @@ document.addEventListener("DOMContentLoaded", function () {
                 kolom.className =
                     "pipeline-kolom";
 
+                kolom.dataset.status =
+                    status;
+
+
+                // =========================
+                // DROPZONE
+                // =========================
+
+                kolom.addEventListener(
+                    "dragover",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        kolom.classList.add(
+                            "drag-over"
+                        );
+                    }
+                );
+
+                kolom.addEventListener(
+                    "dragleave",
+                    function (event) {
+
+                        if (
+                            !kolom.contains(
+                                event.relatedTarget
+                            )
+                        ) {
+
+                            kolom.classList.remove(
+                                "drag-over"
+                            );
+                        }
+                    }
+                );
+
+                kolom.addEventListener(
+                    "drop",
+                    async function (event) {
+
+                        event.preventDefault();
+
+                        kolom.classList.remove(
+                            "drag-over"
+                        );
+
+                        const leadId =
+                            event.dataTransfer
+                                .getData(
+                                    "text/plain"
+                                );
+
+                        const lead =
+                            leads.find(
+                                function (item) {
+
+                                    return (
+                                        item.id ===
+                                        leadId
+                                    );
+                                }
+                            );
+
+                        if (!lead) {
+                            return;
+                        }
+
+                        await wijzigLeadStatus(
+                            lead,
+                            status
+                        );
+                    }
+                );
+
+
+                // =========================
+                // KOLOMKOP
+                // =========================
 
                 const kolomTitel =
                     document.createElement("div");
@@ -538,41 +669,48 @@ document.addEventListener("DOMContentLoaded", function () {
                 kolomTitel.className =
                     "pipeline-kolom-kop";
 
-
                 const titel =
                     document.createElement("h3");
 
-                titel.textContent = status;
-
+                titel.textContent =
+                    status;
 
                 const aantal =
                     document.createElement("span");
-
 
                 const leadsInKolom =
                     leads.filter(
                         function (lead) {
 
-                            const leadStatus =
-                                lead.status || "Nieuw";
-
                             return (
-                                leadStatus === status &&
-                                voldoetAanFilter(lead)
+                                (lead.status || "Nieuw") ===
+                                    status &&
+                                voldoetAanFilter(
+                                    lead
+                                )
                             );
                         }
                     );
 
-
                 aantal.textContent =
                     leadsInKolom.length;
 
+                kolomTitel.appendChild(
+                    titel
+                );
 
-                kolomTitel.appendChild(titel);
-                kolomTitel.appendChild(aantal);
+                kolomTitel.appendChild(
+                    aantal
+                );
 
-                kolom.appendChild(kolomTitel);
+                kolom.appendChild(
+                    kolomTitel
+                );
 
+
+                // =========================
+                // KAARTEN
+                // =========================
 
                 const kaartenContainer =
                     document.createElement("div");
@@ -580,8 +718,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 kaartenContainer.className =
                     "pipeline-kaarten";
 
-
-                if (leadsInKolom.length === 0) {
+                if (
+                    leadsInKolom.length === 0
+                ) {
 
                     const leeg =
                         document.createElement("p");
@@ -590,42 +729,37 @@ document.addEventListener("DOMContentLoaded", function () {
                         "pipeline-leeg";
 
                     leeg.textContent =
-                        "Geen leads";
+                        "Sleep hier een lead";
 
-                    kaartenContainer.appendChild(
-                        leeg
-                    );
+                    kaartenContainer
+                        .appendChild(
+                            leeg
+                        );
 
                 } else {
 
                     leadsInKolom.forEach(
                         function (lead) {
 
-                            const kaart =
-                                maakLeadKaart(
-                                    lead
-                                );
-
                             kaartenContainer
                                 .appendChild(
-                                    kaart
+                                    maakLeadKaart(
+                                        lead
+                                    )
                                 );
                         }
                     );
                 }
 
-
                 kolom.appendChild(
                     kaartenContainer
                 );
-
 
                 pipeline.appendChild(
                     kolom
                 );
             }
         );
-
 
         leadLijst.appendChild(
             pipeline
@@ -634,67 +768,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =========================
-    // FILTER + ZOEKEN
-    // =========================
-
-    function voldoetAanFilter(lead) {
-
-        const filterKlopt =
-
-            huidigeFilter === "ALLE" ||
-
-            lead.classificatie ===
-                huidigeFilter;
-
-
-        const zoek =
-            zoekterm.toLowerCase();
-
-
-        const naam =
-            (
-                lead.naam || ""
-            ).toLowerCase();
-
-
-        const email =
-            (
-                lead.email || ""
-            ).toLowerCase();
-
-
-        const telefoon =
-            (
-                lead.telefoon || ""
-            ).toLowerCase();
-
-
-        const postcode =
-            (
-                lead.postcode || ""
-            ).toLowerCase();
-
-
-        const zoekKlopt =
-
-            naam.includes(zoek) ||
-
-            email.includes(zoek) ||
-
-            telefoon.includes(zoek) ||
-
-            postcode.includes(zoek);
-
-
-        return (
-            filterKlopt &&
-            zoekKlopt
-        );
-    }
-
-
-    // =========================
-    // LEADKAART MAKEN
+    // LEADKAART
     // =========================
 
     function maakLeadKaart(lead) {
@@ -702,9 +776,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const kaart =
             document.createElement("div");
 
-
         const leadClassificatie =
-
             [
                 "HOT",
                 "WARM",
@@ -712,18 +784,71 @@ document.addEventListener("DOMContentLoaded", function () {
             ].includes(
                 lead.classificatie
             )
-
                 ? lead.classificatie
-
                 : "COLD";
 
-
         kaart.className =
-
             "lead-kaart " +
-
             leadClassificatie
                 .toLowerCase();
+
+        // Hierdoor kan de kaart gesleept worden.
+        kaart.draggable = true;
+
+        kaart.dataset.leadId =
+            lead.id;
+
+
+        // =========================
+        // DRAG START
+        // =========================
+
+        kaart.addEventListener(
+            "dragstart",
+            function (event) {
+
+                event.dataTransfer
+                    .setData(
+                        "text/plain",
+                        lead.id
+                    );
+
+                event.dataTransfer.effectAllowed =
+                    "move";
+
+                kaart.classList.add(
+                    "dragging"
+                );
+            }
+        );
+
+
+        // =========================
+        // DRAG EINDE
+        // =========================
+
+        kaart.addEventListener(
+            "dragend",
+            function () {
+
+                kaart.classList.remove(
+                    "dragging"
+                );
+
+                document
+                    .querySelectorAll(
+                        ".pipeline-kolom"
+                    )
+                    .forEach(
+                        function (kolom) {
+
+                            kolom.classList.remove(
+                                "drag-over"
+                            );
+                        }
+                    );
+            }
+        );
 
 
         kaart.innerHTML = `
@@ -737,23 +862,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 </h3>
 
                 <span class="lead-badge ${leadClassificatie.toLowerCase()}">
-
                     ${escapeHtml(
                         leadClassificatie
                     )}
-
                 </span>
 
             </div>
 
-
             <p>
                 <strong>Score:</strong>
-                ${escapeHtml(
-                    lead.score
-                )}/100
+                ${
+                    typeof lead.score === "number"
+                        ? escapeHtml(lead.score)
+                        : "-"
+                }/100
             </p>
-
 
             <p>
                 <strong>Project:</strong>
@@ -762,14 +885,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 )}
             </p>
 
-
             <p>
                 <strong>Urgentie:</strong>
                 ${escapeHtml(
                     lead.urgentie
                 )}
             </p>
-
 
             <p>
                 <strong>Budget:</strong>
@@ -778,14 +899,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 )}
             </p>
 
-
             <p>
                 <strong>E-mail:</strong>
                 ${escapeHtml(
                     lead.email
                 )}
             </p>
-
 
             <p>
                 <strong>Telefoon:</strong>
@@ -794,7 +913,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 )}
             </p>
 
-
             <p>
                 <strong>Postcode:</strong>
                 ${escapeHtml(
@@ -802,59 +920,42 @@ document.addEventListener("DOMContentLoaded", function () {
                 )}
             </p>
 
-
             ${
                 lead.bericht
-
                     ? `
                         <div class="lead-extra">
-
-                            <strong>
-                                Bericht:
-                            </strong>
+                            <strong>Bericht:</strong>
 
                             <p>
                                 ${escapeHtml(
                                     lead.bericht
                                 )}
                             </p>
-
                         </div>
                     `
-
                     : ""
             }
 
-
             ${
                 lead.reden
-
                     ? `
                         <div class="lead-extra">
-
-                            <strong>
-                                Waarom:
-                            </strong>
+                            <strong>Waarom:</strong>
 
                             <p>
                                 ${escapeHtml(
                                     lead.reden
                                 )}
                             </p>
-
                         </div>
                     `
-
                     : ""
             }
 
-
             ${
                 lead.advies
-
                     ? `
                         <div class="lead-extra">
-
                             <strong>
                                 Opvolgadvies:
                             </strong>
@@ -864,17 +965,13 @@ document.addEventListener("DOMContentLoaded", function () {
                                     lead.advies
                                 )}
                             </p>
-
                         </div>
                     `
-
                     : ""
             }
 
-
             ${
                 lead.emailBericht
-
                     ? `
                         <div class="conceptmail">
 
@@ -886,9 +983,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <strong>
                                     Onderwerp:
                                 </strong>
-
                                 <br>
-
                                 ${escapeHtml(
                                     lead.emailOnderwerp
                                 )}
@@ -909,100 +1004,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         </div>
                     `
-
                     : ""
             }
-
 
             <div class="lead-acties">
 
                 <label>
-
                     Status:
 
                     <select
                         class="status-keuze"
                     >
 
-                        <option
-                            value="Nieuw"
-                            ${
-                                lead.status === "Nieuw" ||
-                                lead.status === "nieuw" ||
-                                !lead.status
+                        ${statussen
+                            .map(
+                                function (status) {
 
-                                    ? "selected"
+                                    const geselecteerd =
+                                        (
+                                            lead.status ||
+                                            "Nieuw"
+                                        ) === status
+                                            ? "selected"
+                                            : "";
 
-                                    : ""
-                            }
-                        >
-                            Nieuw
-                        </option>
-
-
-                        <option
-                            value="Contact opgenomen"
-                            ${
-                                lead.status ===
-                                    "Contact opgenomen"
-
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Contact opgenomen
-                        </option>
-
-
-                        <option
-                            value="Afspraak gepland"
-                            ${
-                                lead.status ===
-                                    "Afspraak gepland"
-
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Afspraak gepland
-                        </option>
-
-
-                        <option
-                            value="Gewonnen"
-                            ${
-                                lead.status ===
-                                    "Gewonnen"
-
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Gewonnen
-                        </option>
-
-
-                        <option
-                            value="Verloren"
-                            ${
-                                lead.status ===
-                                    "Verloren"
-
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Verloren
-                        </option>
+                                    return `
+                                        <option
+                                            value="${escapeHtml(status)}"
+                                            ${geselecteerd}
+                                        >
+                                            ${escapeHtml(status)}
+                                        </option>
+                                    `;
+                                }
+                            )
+                            .join("")}
 
                     </select>
-
                 </label>
-
 
                 <button
                     type="button"
@@ -1016,7 +1055,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // =========================
-        // STATUS WIJZIGEN
+        // STATUSSELECTIE
         // =========================
 
         const statusKeuze =
@@ -1024,67 +1063,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 ".status-keuze"
             );
 
-
         statusKeuze.addEventListener(
             "change",
             async function () {
 
-                const oudeStatus =
-                    lead.status || "Nieuw";
+                statusKeuze.disabled =
+                    true;
 
-                const nieuweStatus =
-                    this.value;
-
-
-                this.disabled = true;
-
-
-                try {
-
-                    await updateDoc(
-                        doc(
-                            db,
-                            "leads",
-                            lead.id
-                        ),
-                        {
-                            status:
-                                nieuweStatus
-                        }
-                    );
+                await wijzigLeadStatus(
+                    lead,
+                    statusKeuze.value
+                );
+            }
+        );
 
 
-                    lead.status =
-                        nieuweStatus;
+        // Voorkomt dat slepen begint
+        // wanneer je de status gebruikt.
+        statusKeuze.addEventListener(
+            "mousedown",
+            function (event) {
 
-
-                    toonLeads();
-
-
-                } catch (error) {
-
-                    console.error(
-                        "Status opslaan mislukt:",
-                        error
-                    );
-
-
-                    lead.status =
-                        oudeStatus;
-
-
-                    this.value =
-                        oudeStatus;
-
-
-                    alert(
-                        "De status kon niet worden opgeslagen."
-                    );
-
-                } finally {
-
-                    this.disabled = false;
-                }
+                event.stopPropagation();
             }
         );
 
@@ -1098,7 +1098,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 ".kopieer-mail-knop"
             );
 
-
         if (kopieerKnop) {
 
             kopieerKnop.addEventListener(
@@ -1106,21 +1105,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 async function () {
 
                     const mailTekst =
-
                         "Onderwerp: " +
-
                         (
                             lead.emailOnderwerp ||
                             ""
                         ) +
-
                         "\n\n" +
-
                         (
                             lead.emailBericht ||
                             ""
                         );
-
 
                     try {
 
@@ -1130,27 +1124,20 @@ document.addEventListener("DOMContentLoaded", function () {
                                 mailTekst
                             );
 
-
                         const oudeTekst =
-                            kopieerKnop
-                                .textContent;
-
+                            kopieerKnop.textContent;
 
                         kopieerKnop.textContent =
                             "Gekopieerd!";
 
-
                         setTimeout(
                             function () {
 
-                                kopieerKnop
-                                    .textContent =
+                                kopieerKnop.textContent =
                                     oudeTekst;
-
                             },
                             1500
                         );
-
 
                     } catch (error) {
 
@@ -1158,7 +1145,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             "Kopiëren mislukt:",
                             error
                         );
-
 
                         alert(
                             "De conceptmail kon niet worden gekopieerd."
@@ -1170,14 +1156,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // =========================
-        // LEAD VERWIJDEREN
+        // VERWIJDEREN
         // =========================
 
         const verwijderKnop =
             kaart.querySelector(
                 ".verwijder-knop"
             );
-
 
         verwijderKnop.addEventListener(
             "click",
@@ -1188,16 +1173,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         "Weet je zeker dat je deze lead wilt verwijderen?"
                     );
 
-
                 if (!bevestiging) {
-
                     return;
                 }
 
-
                 verwijderKnop.disabled =
                     true;
-
 
                 try {
 
@@ -1208,7 +1189,6 @@ document.addEventListener("DOMContentLoaded", function () {
                             lead.id
                         )
                     );
-
 
                     leads =
                         leads.filter(
@@ -1221,10 +1201,8 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                         );
 
-
                     toonLeads();
                     updateStatistieken();
-
 
                 } catch (error) {
 
@@ -1233,10 +1211,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         error
                     );
 
-
                     verwijderKnop.disabled =
                         false;
-
 
                     alert(
                         "De lead kon niet worden verwijderd."
@@ -1244,7 +1220,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         );
-
 
         return kaart;
     }
@@ -1256,82 +1231,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateStatistieken() {
 
-        const totaal =
-            document.getElementById(
-                "totaalLeads"
-            );
+        document.getElementById(
+            "totaalLeads"
+        ).textContent =
+            leads.length;
 
-        const hot =
-            document.getElementById(
-                "hotLeads"
-            );
+        document.getElementById(
+            "hotLeads"
+        ).textContent =
+            leads.filter(
+                lead =>
+                    lead.classificatie ===
+                    "HOT"
+            ).length;
 
-        const warm =
-            document.getElementById(
-                "warmLeads"
-            );
+        document.getElementById(
+            "warmLeads"
+        ).textContent =
+            leads.filter(
+                lead =>
+                    lead.classificatie ===
+                    "WARM"
+            ).length;
 
-        const cold =
-            document.getElementById(
-                "coldLeads"
-            );
-
-
-        if (totaal) {
-
-            totaal.textContent =
-                leads.length;
-        }
-
-
-        if (hot) {
-
-            hot.textContent =
-                leads.filter(
-                    function (lead) {
-
-                        return (
-                            lead.classificatie ===
-                            "HOT"
-                        );
-                    }
-                ).length;
-        }
-
-
-        if (warm) {
-
-            warm.textContent =
-                leads.filter(
-                    function (lead) {
-
-                        return (
-                            lead.classificatie ===
-                            "WARM"
-                        );
-                    }
-                ).length;
-        }
-
-
-        if (cold) {
-
-            cold.textContent =
-                leads.filter(
-                    function (lead) {
-
-                        return (
-                            lead.classificatie ===
-                            "COLD"
-                        );
-                    }
-                ).length;
-        }
+        document.getElementById(
+            "coldLeads"
+        ).textContent =
+            leads.filter(
+                lead =>
+                    lead.classificatie ===
+                    "COLD"
+            ).length;
     }
 
 
     // =========================
-    // FILTERS
+    // FILTERKNOPPEN
     // =========================
 
     document
@@ -1359,18 +1294,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // ZOEKEN
     // =========================
 
-    if (zoekveld) {
+    zoekveld.addEventListener(
+        "input",
+        function () {
 
-        zoekveld.addEventListener(
-            "input",
-            function () {
+            zoekterm =
+                this.value;
 
-                zoekterm =
-                    this.value;
-
-                toonLeads();
-            }
-        );
-    }
+            toonLeads();
+        }
+    );
 
 });

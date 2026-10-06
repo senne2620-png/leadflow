@@ -493,4 +493,37 @@ pre {
     .pipeline-kolom {
         min-height: 300px;
     }
+}/* =========================
+   DRAG AND DROP
+========================= */
+
+.lead-kaart {
+    cursor: grab;
+}
+
+.lead-kaart:active {
+    cursor: grabbing;
+}
+
+.lead-kaart.dragging {
+    opacity: 0.45;
+    transform: scale(0.98);
+}
+
+.pipeline-kolom {
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.pipeline-kolom.drag-over {
+    background: #dbeafe;
+    border: 2px dashed #0b5ed7;
+    transform: translateY(-2px);
+}
+
+.pipeline-kolom.drag-over .pipeline-leeg {
+    color: #0b5ed7;
+    font-weight: bold;
 }

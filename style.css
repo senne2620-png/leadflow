@@ -526,4 +526,158 @@ pre {
 .pipeline-kolom.drag-over .pipeline-leeg {
     color: #0b5ed7;
     font-weight: bold;
+}/* =========================
+   PROFESSIONELE AFWERKING
+========================= */
+
+/* Dashboard breder gebruiken */
+#appInhoud {
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
+/* Rustigere achtergrond */
+body {
+    background: #f5f7fa;
+}
+
+/* Sectietitels */
+section > h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
+/* Nieuwe lead formulier iets strakker */
+#leadFormulier {
+    border: 1px solid #e2e8f0;
+}
+
+/* Zoekveld */
+#zoekveld {
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Filterknoppen */
+#filters button {
+    background: white;
+    color: #334155;
+    border: 1px solid #dbe2ea;
+    font-weight: 600;
+}
+
+#filters button:hover {
+    background: #0b5ed7;
+    color: white;
+    border-color: #0b5ed7;
+}
+
+/* Statistiekkaarten */
+#statistieken div {
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+#statistieken div:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Pipeline meer ruimte */
+#pipelineSectie {
+    margin-top: 40px;
+}
+
+#pipelineSectie > h2 {
+    margin-bottom: 18px;
+}
+
+/* Kolommen professioneler */
+.pipeline-kolom {
+    background: #eef2f6;
+    border: 1px solid #dce3ea;
+    border-radius: 14px;
+    padding: 14px;
+}
+
+/* Kolomkop */
+.pipeline-kolom-kop {
+    padding: 2px 2px 12px;
+    border-bottom: 1px solid #d9e0e7;
+}
+
+.pipeline-kolom-kop h3 {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* Teller rechtsboven */
+.pipeline-kolom-kop span {
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Leadkaarten */
+.lead-kaart {
+    border-radius: 12px;
+    padding: 16px;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.lead-kaart:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.09);
+}
+
+/* Naam lead */
+.lead-kaart-boven h3 {
+    font-size: 18px;
+}
+
+/* Details iets rustiger */
+.lead-kaart p {
+    color: #475569;
+}
+
+.lead-kaart p strong {
+    color: #1f2933;
+}
+
+/* Status */
+.status-keuze {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+}
+
+/* Conceptmail */
+.conceptmail {
+    border: 1px solid #e2e8f0;
+}
+
+/* Verwijderen minder dominant */
+.verwijder-knop {
+    font-size: 13px;
+}
+
+/* Scrollbalk pipeline */
+#leadLijst::-webkit-scrollbar {
+    height: 10px;
+}
+
+#leadLijst::-webkit-scrollbar-track {
+    background: #e9eef3;
+    border-radius: 10px;
+}
+
+#leadLijst::-webkit-scrollbar-thumb {
+    background: #b6c2cf;
+    border-radius: 10px;
+}
+
+#leadLijst::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }

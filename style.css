@@ -681,3 +681,28 @@ section > h2 {
 #leadLijst::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
+/* =========================
+   VANDAAG OPVOLGEN
+========================= */
+
+#vandaagOpvolgenSectie {
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
+
+#vandaagOpvolgenLijst {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 340px));
+    gap: 16px;
+    align-items: start;
+}
+
+#vandaagOpvolgenLijst > p {
+    color: #64748b;
+    margin: 0;
+}
+
+#vandaagOpvolgenLijst .lead-kaart {
+    width: 100%;
+    box-sizing: border-box;
+}

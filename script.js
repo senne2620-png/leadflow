@@ -569,7 +569,37 @@ document.addEventListener("DOMContentLoaded", function () {
     // =========================
     // PIPELINE TONEN
     // =========================
+function toonVandaagOpvolgen() {
+    const vandaagLijst = document.getElementById("vandaagOpvolgenLijst");
 
+    if (!vandaagLijst) {
+        return;
+    }
+
+    const vandaag = new Date();
+    const jaar = vandaag.getFullYear();
+    const maand = String(vandaag.getMonth() + 1).padStart(2, "0");
+    const dag = String(vandaag.getDate()).padStart(2, "0");
+
+    const vandaagDatum = `${jaar}-${maand}-${dag}`;
+
+    const leadsVandaag = leads.filter(
+        (lead) => lead.opvolgdatum === vandaagDatum
+    );
+
+    if (leadsVandaag.length === 0) {
+        vandaagLijst.innerHTML =
+            "<p>Geen leads om vandaag op te volgen.</p>";
+        return;
+    }
+
+    vandaagLijst.innerHTML = "";
+
+    leadsVandaag.forEach((lead) => {
+        const kaart = maakLeadKaart(lead);
+        vandaagLijst.appendChild(kaart);
+    });
+}
     function toonLeads() {
 
         leadLijst.innerHTML = "";
@@ -770,6 +800,7 @@ document.addEventListener("DOMContentLoaded", function () {
         leadLijst.appendChild(
             pipeline
         );
+        toonVandaagOpvolgen();
     }
 
 

@@ -1,40 +1,22 @@
 <!DOCTYPE html>
 <html lang="nl">
-
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Noord Installatie LeadFlow</title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
-    <!-- ========================= -->
-    <!-- LOGIN -->
-    <!-- ========================= -->
-
+    <!-- =========================
+         LOGIN
+    ========================== -->
     <div id="loginScherm">
-
         <h1>Noord Installatie</h1>
-
         <h2>LeadFlow Login</h2>
 
-
-        <label for="gebruikersnaam">
-            E-mailadres
-        </label>
-
+        <label for="gebruikersnaam">E-mailadres</label>
         <input
             type="email"
             id="gebruikersnaam"
@@ -42,11 +24,7 @@
             autocomplete="email"
         >
 
-
-        <label for="wachtwoord">
-            Wachtwoord
-        </label>
-
+        <label for="wachtwoord">Wachtwoord</label>
         <input
             type="password"
             id="wachtwoord"
@@ -54,53 +32,34 @@
             autocomplete="current-password"
         >
 
-
-        <button
-            type="button"
-            id="loginKnop"
-        >
+        <button type="button" id="loginKnop">
             Inloggen
         </button>
 
-
         <p id="loginFout"></p>
-
     </div>
 
 
-    <!-- ========================= -->
-    <!-- DASHBOARD -->
-    <!-- ========================= -->
-
-    <div
-        id="appInhoud"
-        style="display: none;"
-    >
+    <!-- =========================
+         APP
+    ========================== -->
+    <div id="appInhoud" style="display: none;">
 
         <header>
+            <h1>Noord Installatie LeadFlow</h1>
 
-            <h1>
-                Noord Installatie LeadFlow
-            </h1>
-
-            <button
-                type="button"
-                id="uitloggenKnop"
-            >
+            <button type="button" id="uitloggenKnop">
                 Uitloggen
             </button>
-
         </header>
 
 
-        <!-- ========================= -->
-        <!-- NIEUWE LEAD -->
-        <!-- ========================= -->
-
+        <!-- =========================
+             NIEUWE LEAD
+        ========================== -->
         <section>
 
             <h2>Nieuwe lead</h2>
-
 
             <form id="leadFormulier">
 
@@ -111,7 +70,6 @@
                     required
                 >
 
-
                 <input
                     type="email"
                     id="email"
@@ -119,14 +77,12 @@
                     required
                 >
 
-
                 <input
                     type="text"
                     id="telefoon"
                     placeholder="Telefoonnummer"
                     required
                 >
-
 
                 <input
                     type="text"
@@ -136,78 +92,51 @@
                 >
 
 
-                <select
-                    id="urgentie"
-                    required
-                >
-
-                    <option value="">
-                        Urgentie
-                    </option>
-
-                    <option value="Vandaag">
-                        Vandaag
-                    </option>
-
-                    <option value="Deze week">
-                        Deze week
-                    </option>
-
-                    <option value="Later">
-                        Later
-                    </option>
-
+                <!-- Urgentie -->
+                <select id="urgentie" required>
+                    <option value="">Urgentie</option>
+                    <option value="Vandaag">Vandaag</option>
+                    <option value="Deze week">Deze week</option>
+                    <option value="Later">Later</option>
                 </select>
 
 
-                <select
-                    id="budget"
-                    required
-                >
-
-                    <option value="">
-                        Budget
-                    </option>
-
-                    <option value="Hoog">
-                        Hoog
-                    </option>
-
-                    <option value="Middel">
-                        Middel
-                    </option>
-
-                    <option value="Laag">
-                        Laag
-                    </option>
-
+                <!-- Budget -->
+                <select id="budget" required>
+                    <option value="">Budget</option>
+                    <option value="Hoog">Hoog</option>
+                    <option value="Middel">Middel</option>
+                    <option value="Laag">Laag</option>
                 </select>
 
 
-                <select
-                    id="project"
-                    required
-                >
-
-                    <option value="">
-                        Type project
-                    </option>
-
+                <!-- Project -->
+                <select id="project" required>
+                    <option value="">Type project</option>
                     <option value="Grote installatie">
                         Grote installatie
                     </option>
-
                     <option value="Nieuwe installatie">
                         Nieuwe installatie
                     </option>
-
                     <option value="Kleine reparatie">
                         Kleine reparatie
                     </option>
-
                 </select>
 
 
+                <!-- =========================
+                     NIEUW IN LEADFLOW V2
+                     OPVOLGDATUM
+                ========================== -->
+                <input
+                    type="date"
+                    id="opvolgdatum"
+                    title="Opvolgdatum"
+                >
+
+
+                <!-- Bericht -->
                 <textarea
                     id="bericht"
                     placeholder="Bericht of omschrijving van de klant"
@@ -215,13 +144,13 @@
                 ></textarea>
 
 
+                <!-- AI analyse -->
                 <button
                     type="submit"
                     id="analyseKnop"
                 >
                     Lead analyseren met AI
                 </button>
-
 
                 <p id="analyseStatus"></p>
 
@@ -230,10 +159,9 @@
         </section>
 
 
-        <!-- ========================= -->
-        <!-- ZOEKEN -->
-        <!-- ========================= -->
-
+        <!-- =========================
+             ZOEKEN
+        ========================== -->
         <section>
 
             <h2>Leads</h2>
@@ -247,10 +175,9 @@
         </section>
 
 
-        <!-- ========================= -->
-        <!-- FILTERS -->
-        <!-- ========================= -->
-
+        <!-- =========================
+             FILTERS
+        ========================== -->
         <section id="filters">
 
             <button
@@ -260,7 +187,6 @@
                 Alle
             </button>
 
-
             <button
                 type="button"
                 data-filter="HOT"
@@ -268,14 +194,12 @@
                 HOT 🔥
             </button>
 
-
             <button
                 type="button"
                 data-filter="WARM"
             >
                 WARM 🟠
             </button>
-
 
             <button
                 type="button"
@@ -287,70 +211,40 @@
         </section>
 
 
-        <!-- ========================= -->
-        <!-- STATISTIEKEN -->
-        <!-- ========================= -->
-
+        <!-- =========================
+             STATISTIEKEN
+        ========================== -->
         <section id="statistieken">
 
             <div class="stat-kaart">
-
                 <h3>Totaal</h3>
-
-                <span id="totaalLeads">
-                    0
-                </span>
-
+                <span id="totaalLeads">0</span>
             </div>
 
-
             <div class="stat-kaart">
-
                 <h3>HOT</h3>
-
-                <span id="hotLeads">
-                    0
-                </span>
-
+                <span id="hotLeads">0</span>
             </div>
 
-
             <div class="stat-kaart">
-
                 <h3>WARM</h3>
-
-                <span id="warmLeads">
-                    0
-                </span>
-
+                <span id="warmLeads">0</span>
             </div>
 
-
             <div class="stat-kaart">
-
                 <h3>COLD</h3>
-
-                <span id="coldLeads">
-                    0
-                </span>
-
+                <span id="coldLeads">0</span>
             </div>
 
         </section>
 
 
-        <!-- ========================= -->
-        <!-- LEAD PIPELINE -->
-        <!-- ========================= -->
-
+        <!-- =========================
+             LEAD PIPELINE
+        ========================== -->
         <section id="pipelineSectie">
 
             <h2>Lead Pipeline</h2>
-
-            <!--
-                De pipeline-kolommen worden
-                straks door script.js opgebouwd.
-            -->
 
             <div id="leadLijst"></div>
 
@@ -359,15 +253,13 @@
     </div>
 
 
-    <!-- ========================= -->
-    <!-- JAVASCRIPT -->
-    <!-- ========================= -->
-
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
     <script
         type="module"
         src="script.js"
     ></script>
 
 </body>
-
 </html>

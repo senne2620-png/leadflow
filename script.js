@@ -283,6 +283,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         .getElementById("project")
                         .value,
 
+                // NIEUW IN V2
+                opvolgdatum:
+                    document
+                        .getElementById("opvolgdatum")
+                        .value,
+
                 bericht:
                     document
                         .getElementById("bericht")
@@ -442,7 +448,7 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-    // =========================
+        // =========================
     // HTML VEILIG TONEN
     // =========================
 
@@ -792,7 +798,6 @@ document.addEventListener("DOMContentLoaded", function () {
             leadClassificatie
                 .toLowerCase();
 
-        // Hierdoor kan de kaart gesleept worden.
         kaart.draggable = true;
 
         kaart.dataset.leadId =
@@ -898,6 +903,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     lead.budget
                 )}
             </p>
+
+            ${
+                lead.opvolgdatum
+                    ? `
+                        <p>
+                            <strong>Opvolgdatum:</strong>
+                            ${escapeHtml(
+                                lead.opvolgdatum
+                            )}
+                        </p>
+                    `
+                    : ""
+            }
 
             <p>
                 <strong>E-mail:</strong>
@@ -1052,9 +1070,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             </div>
         `;
-
-
-        // =========================
+                // =========================
         // STATUSSELECTIE
         // =========================
 

@@ -941,7 +941,7 @@ function toonVandaagOpvolgen() {
                         <p>
                             <strong>Opvolgdatum:</strong>
                             ${escapeHtml(
-                                lead.opvolgdatum
+    lead.opvolgdatum.split("-").reverse().join("-")
                             )}
                         </p>
                     `

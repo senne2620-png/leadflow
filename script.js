@@ -600,6 +600,43 @@ function toonVandaagOpvolgen() {
         vandaagLijst.appendChild(kaart);
     });
 }
+// =========================
+// OPVOLGING TE LAAT
+// =========================
+function toonOpvolgingTeLaat() {
+    const teLaatLijst = document.getElementById("teLaatLijst");
+
+    if (!teLaatLijst) {
+        return;
+    }
+
+    const vandaag = new Date();
+    const jaar = vandaag.getFullYear();
+    const maand = String(vandaag.getMonth() + 1).padStart(2, "0");
+    const dag = String(vandaag.getDate()).padStart(2, "0");
+
+    const vandaagDatum = `${jaar}-${maand}-${dag}`;
+
+    const achterstalligeLeads = leads.filter((lead) =>
+        lead.opvolgdatum &&
+        lead.opvolgdatum < vandaagDatum &&
+        lead.status !== "Gewonnen" &&
+        lead.status !== "Verloren"
+    );
+
+    if (achterstalligeLeads.length === 0) {
+        teLaatLijst.innerHTML =
+            "<p>Geen achterstallige leads.</p>";
+        return;
+    }
+
+    teLaatLijst.innerHTML = "";
+
+    achterstalligeLeads.forEach((lead) => {
+        const kaart = maakLeadKaart(lead);
+        teLaatLijst.appendChild(kaart);
+    });
+}
     function toonLeads() {
 
         leadLijst.innerHTML = "";
@@ -801,6 +838,7 @@ function toonVandaagOpvolgen() {
             pipeline
         );
         toonVandaagOpvolgen();
+        toonOpvolgingTeLaat();
     }
 
 

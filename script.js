@@ -619,12 +619,7 @@ function toonOpvolgingTeLaat() {
 
     const vandaagDatum = `${jaar}-${maand}-${dag}`;
 
-    console.log("Vandaag:", vandaagDatum);
-    console.log("Achterstallige controle:", leads.map(lead => ({
-        naam: lead.naam,
-        opvolgdatum: lead.opvolgdatum,
-        status: lead.status
-    })));
+    
 
     const achterstalligeLeads = leads.filter((lead) =>
         lead.opvolgdatum &&

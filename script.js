@@ -582,6 +582,7 @@ function toonVandaagOpvolgen() {
     const dag = String(vandaag.getDate()).padStart(2, "0");
 
     const vandaagDatum = `${jaar}-${maand}-${dag}`;
+    
 
     const leadsVandaag = leads.filter(
         (lead) => lead.opvolgdatum === vandaagDatum
@@ -604,6 +605,7 @@ function toonVandaagOpvolgen() {
 // OPVOLGING TE LAAT
 // =========================
 function toonOpvolgingTeLaat() {
+
     const teLaatLijst = document.getElementById("teLaatLijst");
 
     if (!teLaatLijst) {
@@ -613,9 +615,16 @@ function toonOpvolgingTeLaat() {
     const vandaag = new Date();
     const jaar = vandaag.getFullYear();
     const maand = String(vandaag.getMonth() + 1).padStart(2, "0");
-    const dag = String(vandaag.getDate()).padStart(2, "0");
+        const dag = String(vandaag.getDate()).padStart(2, "0");
 
     const vandaagDatum = `${jaar}-${maand}-${dag}`;
+
+    console.log("Vandaag:", vandaagDatum);
+    console.log("Achterstallige controle:", leads.map(lead => ({
+        naam: lead.naam,
+        opvolgdatum: lead.opvolgdatum,
+        status: lead.status
+    })));
 
     const achterstalligeLeads = leads.filter((lead) =>
         lead.opvolgdatum &&

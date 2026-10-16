@@ -1149,6 +1149,16 @@ function toonOpvolgingTeLaat() {
                     </select>
                 </label>
 
+                <label>
+                    Opvolgdatum:
+
+                    <input
+                        type="date"
+                        class="opvolgdatum-keuze"
+                        value="${escapeHtml(lead.opvolgdatum || "")}"
+                    >
+                </label>
+
                 <button
                     type="button"
                     class="verwijder-knop"
@@ -1185,6 +1195,90 @@ function toonOpvolgingTeLaat() {
         // Voorkomt dat slepen begint
         // wanneer je de status gebruikt.
         statusKeuze.addEventListener(
+            "mousedown",
+            function (event) {
+
+                event.stopPropagation();
+            }
+        );
+
+
+        // =========================
+        // OPVOLGDATUM WIJZIGEN
+        // =========================
+
+        const opvolgdatumKeuze =
+            kaart.querySelector(
+                ".opvolgdatum-keuze"
+            );
+
+        opvolgdatumKeuze.addEventListener(
+            "change",
+            async function () {
+
+                const oudeDatum =
+                    lead.opvolgdatum || "";
+
+                const nieuweDatum =
+                    opvolgdatumKeuze.value;
+
+                // Leeg veld of geen wijziging:
+                // niets opslaan.
+                if (
+                    !nieuweDatum ||
+                    nieuweDatum === oudeDatum
+                ) {
+                    opvolgdatumKeuze.value =
+                        oudeDatum;
+                    return;
+                }
+
+                opvolgdatumKeuze.disabled =
+                    true;
+
+                try {
+
+                    await updateDoc(
+                        doc(
+                            db,
+                            "leads",
+                            lead.id
+                        ),
+                        {
+                            opvolgdatum:
+                                nieuweDatum
+                        }
+                    );
+
+                    lead.opvolgdatum =
+                        nieuweDatum;
+
+                    toonLeads();
+
+                } catch (error) {
+
+                    console.error(
+                        "Opvolgdatum opslaan mislukt:",
+                        error
+                    );
+
+                    opvolgdatumKeuze.value =
+                        oudeDatum;
+
+                    opvolgdatumKeuze.disabled =
+                        false;
+
+                    alert(
+                        "De opvolgdatum kon niet worden opgeslagen."
+                    );
+                }
+            }
+        );
+
+
+        // Voorkomt dat slepen begint
+        // wanneer je de datum gebruikt.
+        opvolgdatumKeuze.addEventListener(
             "mousedown",
             function (event) {
 

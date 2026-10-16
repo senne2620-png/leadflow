@@ -638,6 +638,21 @@ function toonOpvolgingTeLaat() {
 
     achterstalligeLeads.forEach((lead) => {
         const kaart = maakLeadKaart(lead);
+
+        const dagenTeLaat = Math.round(
+            (new Date(vandaagDatum) - new Date(lead.opvolgdatum)) / 86400000
+        );
+
+        const label = document.createElement("span");
+        label.className = "te-laat-label";
+        label.textContent =
+            dagenTeLaat === 1
+                ? "1 dag te laat"
+                : `${dagenTeLaat} dagen te laat`;
+
+        kaart.classList.add("te-laat");
+        kaart.prepend(label);
+
         teLaatLijst.appendChild(kaart);
     });
 }

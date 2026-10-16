@@ -718,3 +718,19 @@ section > h2 {
     max-width: 320px !important;
     flex: 0 0 320px;
 }
+
+/* Kaarten bij Opvolging te laat */
+#teLaatLijst .lead-kaart.te-laat {
+    border: 2px solid #dc3545;
+}
+
+.te-laat-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: #dc3545;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: bold;
+}

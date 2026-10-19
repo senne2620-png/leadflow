@@ -1248,64 +1248,96 @@ function toonOpvolgingTeLaat() {
 
             <form class="bewerk-formulier" hidden>
 
-                <input
-                    type="text"
-                    name="naam"
-                    placeholder="Naam"
-                    value="${escapeHtml(lead.naam)}"
-                    required
-                >
+                <label>
+                    Naam:
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="E-mailadres"
-                    value="${escapeHtml(lead.email)}"
-                    required
-                >
+                    <input
+                        type="text"
+                        name="naam"
+                        placeholder="Naam"
+                        value="${escapeHtml(lead.naam)}"
+                        required
+                    >
+                </label>
 
-                <input
-                    type="text"
-                    name="telefoon"
-                    placeholder="Telefoonnummer"
-                    value="${escapeHtml(lead.telefoon)}"
-                    required
-                >
+                <label>
+                    E-mailadres:
 
-                <input
-                    type="text"
-                    name="postcode"
-                    placeholder="Postcode"
-                    value="${escapeHtml(lead.postcode)}"
-                    required
-                >
+                    <input
+                        type="email"
+                        name="email"
+                        placeholder="E-mailadres"
+                        value="${escapeHtml(lead.email)}"
+                        required
+                    >
+                </label>
 
-                <select name="project" required>
-                    ${maakKeuzeOpties(
-                        ["Grote installatie", "Nieuwe installatie", "Kleine reparatie"],
-                        lead.project
-                    )}
-                </select>
+                <label>
+                    Telefoonnummer:
 
-                <select name="urgentie" required>
-                    ${maakKeuzeOpties(
-                        ["Vandaag", "Deze week", "Later"],
-                        lead.urgentie
-                    )}
-                </select>
+                    <input
+                        type="text"
+                        name="telefoon"
+                        placeholder="Telefoonnummer"
+                        value="${escapeHtml(lead.telefoon)}"
+                        required
+                    >
+                </label>
 
-                <select name="budget" required>
-                    ${maakKeuzeOpties(
-                        ["Hoog", "Middel", "Laag"],
-                        lead.budget
-                    )}
-                </select>
+                <label>
+                    Postcode:
 
-                <textarea
-                    name="bericht"
-                    rows="4"
-                    placeholder="Bericht of omschrijving van de klant"
-                >${escapeHtml(lead.bericht)}</textarea>
+                    <input
+                        type="text"
+                        name="postcode"
+                        placeholder="Postcode"
+                        value="${escapeHtml(lead.postcode)}"
+                        required
+                    >
+                </label>
+
+                <label>
+                    Project:
+
+                    <select name="project" required>
+                        ${maakKeuzeOpties(
+                            ["Grote installatie", "Nieuwe installatie", "Kleine reparatie"],
+                            lead.project
+                        )}
+                    </select>
+                </label>
+
+                <label>
+                    Urgentie:
+
+                    <select name="urgentie" required>
+                        ${maakKeuzeOpties(
+                            ["Vandaag", "Deze week", "Later"],
+                            lead.urgentie
+                        )}
+                    </select>
+                </label>
+
+                <label>
+                    Budget:
+
+                    <select name="budget" required>
+                        ${maakKeuzeOpties(
+                            ["Hoog", "Middel", "Laag"],
+                            lead.budget
+                        )}
+                    </select>
+                </label>
+
+                <label>
+                    Bericht:
+
+                    <textarea
+                        name="bericht"
+                        rows="4"
+                        placeholder="Bericht of omschrijving van de klant"
+                    >${escapeHtml(lead.bericht)}</textarea>
+                </label>
 
                 <button
                     type="submit"

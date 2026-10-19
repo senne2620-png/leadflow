@@ -253,6 +253,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 appInhoud.style.display = "none";
                 loginScherm.style.display = "block";
 
+                                analyseStatus.textContent = "";
+
                 document
                     .getElementById("wachtwoord")
                     .value = "";

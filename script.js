@@ -896,6 +896,43 @@ function toonOpvolgingTeLaat() {
 
 
     // =========================
+    // KEUZE-OPTIES BEWERKEN
+    // =========================
+
+    function maakKeuzeOpties(waarden, huidigeWaarde) {
+
+        const huidig =
+            huidigeWaarde || "";
+
+        const alleWaarden =
+            waarden.includes(huidig)
+                ? waarden
+                : [huidig, ...waarden];
+
+        return alleWaarden
+            .map(
+                function (waarde) {
+
+                    const geselecteerd =
+                        waarde === huidig
+                            ? "selected"
+                            : "";
+
+                    return `
+                        <option
+                            value="${escapeHtml(waarde)}"
+                            ${geselecteerd}
+                        >
+                            ${escapeHtml(waarde || "Kies...")}
+                        </option>
+                    `;
+                }
+            )
+            .join("");
+    }
+
+
+    // =========================
     // LEADKAART
     // =========================
 
@@ -1195,12 +1232,95 @@ function toonOpvolgingTeLaat() {
 
                 <button
                     type="button"
+                    class="bewerk-knop"
+                >
+                    Bewerk
+                </button>
+
+                <button
+                    type="button"
                     class="verwijder-knop"
                 >
                     Verwijder lead
                 </button>
 
             </div>
+
+            <form class="bewerk-formulier" hidden>
+
+                <input
+                    type="text"
+                    name="naam"
+                    placeholder="Naam"
+                    value="${escapeHtml(lead.naam)}"
+                    required
+                >
+
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="E-mailadres"
+                    value="${escapeHtml(lead.email)}"
+                    required
+                >
+
+                <input
+                    type="text"
+                    name="telefoon"
+                    placeholder="Telefoonnummer"
+                    value="${escapeHtml(lead.telefoon)}"
+                    required
+                >
+
+                <input
+                    type="text"
+                    name="postcode"
+                    placeholder="Postcode"
+                    value="${escapeHtml(lead.postcode)}"
+                    required
+                >
+
+                <select name="project" required>
+                    ${maakKeuzeOpties(
+                        ["Grote installatie", "Nieuwe installatie", "Kleine reparatie"],
+                        lead.project
+                    )}
+                </select>
+
+                <select name="urgentie" required>
+                    ${maakKeuzeOpties(
+                        ["Vandaag", "Deze week", "Later"],
+                        lead.urgentie
+                    )}
+                </select>
+
+                <select name="budget" required>
+                    ${maakKeuzeOpties(
+                        ["Hoog", "Middel", "Laag"],
+                        lead.budget
+                    )}
+                </select>
+
+                <textarea
+                    name="bericht"
+                    rows="4"
+                    placeholder="Bericht of omschrijving van de klant"
+                >${escapeHtml(lead.bericht)}</textarea>
+
+                <button
+                    type="submit"
+                    class="bewerk-opslaan-knop"
+                >
+                    Opslaan
+                </button>
+
+                <button
+                    type="reset"
+                >
+                    Annuleren
+                </button>
+
+            </form>
         `;
                 // =========================
         // STATUSSELECTIE
@@ -1385,6 +1505,125 @@ function toonOpvolgingTeLaat() {
                 }
             );
         }
+
+
+        // =========================
+        // BEWERKEN
+        // =========================
+
+        const bewerkKnop =
+            kaart.querySelector(
+                ".bewerk-knop"
+            );
+
+        const bewerkFormulier =
+            kaart.querySelector(
+                ".bewerk-formulier"
+            );
+
+        bewerkKnop.addEventListener(
+            "click",
+            function () {
+
+                bewerkFormulier.hidden =
+                    !bewerkFormulier.hidden;
+            }
+        );
+
+        // Annuleren: oude waarden terug
+        // en formulier sluiten.
+        bewerkFormulier.addEventListener(
+            "reset",
+            function () {
+
+                bewerkFormulier.hidden =
+                    true;
+            }
+        );
+
+        bewerkFormulier.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                const velden =
+                    bewerkFormulier.elements;
+
+                // Alleen deze velden worden
+                // opgeslagen.
+                const wijzigingen = {
+                    naam:
+                        velden.naam.value.trim(),
+                    email:
+                        velden.email.value.trim(),
+                    telefoon:
+                        velden.telefoon.value.trim(),
+                    postcode:
+                        velden.postcode.value.trim(),
+                    project:
+                        velden.project.value,
+                    urgentie:
+                        velden.urgentie.value,
+                    budget:
+                        velden.budget.value,
+                    bericht:
+                        velden.bericht.value.trim()
+                };
+
+                const opslaanKnop =
+                    bewerkFormulier.querySelector(
+                        ".bewerk-opslaan-knop"
+                    );
+
+                opslaanKnop.disabled =
+                    true;
+
+                try {
+
+                    await updateDoc(
+                        doc(
+                            db,
+                            "leads",
+                            lead.id
+                        ),
+                        wijzigingen
+                    );
+
+                    Object.assign(
+                        lead,
+                        wijzigingen
+                    );
+
+                    toonLeads();
+
+                } catch (error) {
+
+                    console.error(
+                        "Lead bewerken mislukt:",
+                        error
+                    );
+
+                    opslaanKnop.disabled =
+                        false;
+
+                    alert(
+                        "De lead kon niet worden opgeslagen."
+                    );
+                }
+            }
+        );
+
+
+        // Voorkomt dat slepen begint
+        // wanneer je in het formulier werkt.
+        bewerkFormulier.addEventListener(
+            "mousedown",
+            function (event) {
+
+                event.stopPropagation();
+            }
+        );
 
 
         // =========================

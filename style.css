@@ -734,3 +734,61 @@ section > h2 {
     font-size: 12px;
     font-weight: bold;
 }
+
+/* =========================
+   BEWERKFORMULIER OP LEADKAART
+========================= */
+
+/* Knop Bewerk: zelfde vorm als Verwijder lead */
+.bewerk-knop {
+    width: 100%;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+/* Formulier: velden onder elkaar zoals Nieuwe lead,
+   met een scheidingslijn zoals .lead-acties */
+.bewerk-formulier {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 100%;
+    margin-top: 15px;
+    padding: 15px 0 0;
+    border-top: 1px solid #dde3e8;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Verborgen blijft verborgen */
+.bewerk-formulier[hidden] {
+    display: none;
+}
+
+/* Velden: zelfde rand en breedte als de status-keuze */
+.bewerk-formulier input,
+.bewerk-formulier select,
+.bewerk-formulier textarea {
+    max-width: 100%;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+}
+
+/* Opslaan en Annuleren zonder extra marge */
+.bewerk-formulier button {
+    margin: 0;
+}
+
+/* Annuleren: rustig, zoals de filterknoppen */
+.bewerk-formulier button[type="reset"] {
+    background: white;
+    color: #334155;
+    border: 1px solid #dbe2ea;
+    font-weight: 600;
+}
+
+.bewerk-formulier button[type="reset"]:hover {
+    background: #0b5ed7;
+    color: white;
+    border-color: #0b5ed7;
+}

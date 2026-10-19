@@ -18,7 +18,10 @@ import {
     addDoc,
     updateDoc,
     deleteDoc,
-    doc
+    doc,
+    getDoc,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -75,6 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("analyseStatus");
 
     let leads = [];
+    let bedrijfId = null;
     let huidigeFilter = "ALLE";
     let zoekterm = "";
 
@@ -95,9 +99,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
 
+            const gebruikerSnapshot =
+                await getDoc(
+                    doc(
+                        db,
+                        "gebruikers",
+                        auth.currentUser.uid
+                    )
+                );
+
+            bedrijfId =
+                gebruikerSnapshot.exists()
+                    ? gebruikerSnapshot.data().bedrijfId || null
+                    : null;
+
+            if (!bedrijfId) {
+
+                analyseStatus.textContent =
+                    "Je account is nog niet aan een bedrijf gekoppeld.";
+
+                return;
+            }
+
             const snapshot =
                 await getDocs(
-                    collection(db, "leads")
+                    query(
+                        collection(db, "leads"),
+                        where("bedrijfId", "==", bedrijfId)
+                    )
                 );
 
             leads = [];
@@ -400,7 +429,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     emailBericht:
                         analyse.emailBericht || "",
 
-                    status: "Nieuw"
+                    status: "Nieuw",
+
+                    bedrijfId:
+                        bedrijfId
                 };
 
                 const documentReferentie =

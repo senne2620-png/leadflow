@@ -1794,6 +1794,118 @@ function toonOpvolgingTeLaat() {
 
 
     // =========================
+    // EXPORTEREN NAAR CSV
+    // =========================
+
+    const exportVelden = [
+        ["naam", "Naam"],
+        ["email", "E-mail"],
+        ["telefoon", "Telefoon"],
+        ["postcode", "Postcode"],
+        ["project", "Project"],
+        ["urgentie", "Urgentie"],
+        ["budget", "Budget"],
+        ["status", "Status"],
+        ["opvolgdatum", "Opvolgdatum"],
+        ["score", "Score"],
+        ["classificatie", "Classificatie"]
+    ];
+
+    function maakCsvCel(waarde) {
+
+        let tekst =
+            String(waarde ?? "");
+
+        // Formule-injectie voorkomen:
+        // Excel voert deze cel dan niet uit.
+        if (/^[=+\-@\t\r]/.test(tekst)) {
+            tekst =
+                "'" + tekst;
+        }
+
+        // Altijd tussen aanhalingstekens,
+        // aanhalingstekens verdubbelen.
+        return (
+            '"' +
+            tekst.replaceAll('"', '""') +
+            '"'
+        );
+    }
+
+    document
+        .getElementById(
+            "exportKnop"
+        )
+        .addEventListener(
+            "click",
+            function () {
+
+                if (leads.length === 0) {
+
+                    alert(
+                        "Er zijn geen leads om te exporteren."
+                    );
+                    return;
+                }
+
+                const regels = [
+                    exportVelden
+                        .map(
+                            veld => maakCsvCel(veld[1])
+                        )
+                        .join(";")
+                ];
+
+                leads.forEach(
+                    function (lead) {
+
+                        regels.push(
+                            exportVelden
+                                .map(
+                                    veld => maakCsvCel(lead[veld[0]])
+                                )
+                                .join(";")
+                        );
+                    }
+                );
+
+                const csv =
+                    "﻿" +
+                    regels.join("\r\n");
+
+                const bestand =
+                    new Blob(
+                        [csv],
+                        { type: "text/csv;charset=utf-8" }
+                    );
+
+                const link =
+                    document.createElement("a");
+
+                link.href =
+                    URL.createObjectURL(bestand);
+
+                link.download =
+                    "leads-" +
+                    new Date().toISOString().slice(0, 10) +
+                    ".csv";
+
+                link.click();
+
+                setTimeout(
+                    function () {
+
+                        URL.revokeObjectURL(
+                            link.href
+                        );
+                    },
+                    1000
+                );
+            }
+        );
+
+
+    // =========================
     // ZOEKEN
     // =========================
 

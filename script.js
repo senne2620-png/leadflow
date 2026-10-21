@@ -1870,7 +1870,7 @@ function toonOpvolgingTeLaat() {
                 );
 
                 const csv =
-                    "﻿" +
+                    "\uFEFF" +
                     regels.join("\r\n");
 
                 const bestand =

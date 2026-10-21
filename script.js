@@ -8,7 +8,8 @@ import {
     getAuth,
     signInWithEmailAndPassword,
     signOut,
-    onAuthStateChanged
+    onAuthStateChanged,
+    sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
 import {
@@ -201,6 +202,55 @@ document.addEventListener("DOMContentLoaded", function () {
                 loginKnop.disabled = false;
                 loginKnop.textContent = "Inloggen";
             }
+        }
+    );
+
+
+    // =========================
+    // WACHTWOORD VERGETEN
+    // =========================
+
+    const wachtwoordVergetenLink =
+        document.getElementById("wachtwoordVergetenLink");
+
+    wachtwoordVergetenLink.addEventListener(
+        "click",
+        async function (event) {
+
+            // Voorkomt dat de pagina
+            // naar "#" springt.
+            event.preventDefault();
+
+            const email =
+                document
+                    .getElementById("gebruikersnaam")
+                    .value
+                    .trim();
+
+            if (!email) {
+
+                loginFout.textContent =
+                    "Vul eerst je e-mailadres in.";
+
+                return;
+            }
+
+            try {
+
+                await sendPasswordResetEmail(
+                    auth,
+                    email
+                );
+
+            } catch (error) {
+
+                // Bewust geen details tonen of loggen:
+                // zo is niet te zien of het adres
+                // een account heeft.
+            }
+
+            loginFout.textContent =
+                "Als dit e-mailadres bij een account hoort, is er een mail verstuurd.";
         }
     );
 

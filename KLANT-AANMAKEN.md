@@ -69,3 +69,10 @@ Onthoud het Document ID. Dat is straks het `bedrijfId`.
 1. Verwijder het document in `gebruikers` met de uid van het account.
 2. Verwijder het account in **Authentication** > **Users**.
 3. De leads en het bedrijf blijven staan. Verwijder die alleen als je zeker weet dat ze weg mogen.
+
+## Accounts aanmaken en wachtwoorden
+
+- **Sign-up staat uit.** In Firebase (Authentication > Settings > User actions) staat "Enable create (sign-up)" uit. Niemand kan zelf een account aanmaken. Jij maakt accounts aan in de Firebase Console (stap 2 hierboven). Dat blijft werken.
+- **Wachtwoord vergeten.** Een klant kan op het inlogscherm op "Wachtwoord vergeten?" klikken. Hij vult zijn e-mailadres in en krijgt van Firebase een Nederlandse mail met een link om een nieuw wachtwoord te kiezen. Kijk ook in de spam.
+- Het scherm toont altijd dezelfde melding, ook als het adres niet bij een account hoort. Zo kan niemand uitzoeken welke e-mailadressen een account hebben.
+- Plak herstelmails nooit in een chat of document. De link in de mail geeft toegang tot het account.

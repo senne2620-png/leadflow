@@ -792,3 +792,10 @@ section > h2 {
     color: white;
     border-color: #0b5ed7;
 }
+
+/* Ruimte tussen label en veld in het bewerkformulier */
+.bewerk-formulier label input,
+.bewerk-formulier label select,
+.bewerk-formulier label textarea {
+    margin-top: 8px;
+}

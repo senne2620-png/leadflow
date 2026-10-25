@@ -1898,6 +1898,26 @@ function toonOpvolgingTeLaat() {
                     return;
                 }
 
+                // Alleen de leads die bij het huidige
+                // filter en de zoekterm passen.
+                const gefilterdeLeads =
+                    leads.filter(
+                        function (lead) {
+
+                            return voldoetAanFilter(
+                                lead
+                            );
+                        }
+                    );
+
+                if (gefilterdeLeads.length === 0) {
+
+                    alert(
+                        "Er zijn geen leads om te exporteren met dit filter."
+                    );
+                    return;
+                }
+
                 const regels = [
                     exportVelden
                         .map(
@@ -1906,7 +1926,7 @@ function toonOpvolgingTeLaat() {
                         .join(";")
                 ];
 
-                leads.forEach(
+                gefilterdeLeads.forEach(
                     function (lead) {
 
                         regels.push(

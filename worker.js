@@ -96,10 +96,7 @@ export default {
                 );
 
 
-            console.log(
-                "Firebase gebruiker:",
-                gebruiker.sub
-            );
+
 
 
             // =========================
@@ -306,10 +303,7 @@ Regels:
                     error:
                         isAuthError
                             ? "Ongeldige of verlopen login."
-                            : "De AI-analyse kon niet worden uitgevoerd.",
-
-                    details:
-                        error.message
+                            : "De AI-analyse kon niet worden uitgevoerd."
                 },
                 {
                     status:
